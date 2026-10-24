@@ -45,7 +45,7 @@ export async function POST(req: Request) {
   const outcome = drawOutcome(Date.now());
 
   let txHashes: string[] | null = null;
-  if (onChainConfigured()) {
+  if (await onChainConfigured()) {
     try {
       txHashes = await runOnChainSpin(address as `0x${string}`, outcome);
     } catch {

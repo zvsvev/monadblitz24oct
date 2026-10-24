@@ -12,6 +12,7 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://thebuzzme.bond"),
   title: "BuzzMe: pay-to-rank billboard on Monad",
   description:
     "Pay in USDC to rank your project on a public board, or share the board to try the daily gacha. On Monad testnet.",

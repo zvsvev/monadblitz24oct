@@ -6,7 +6,7 @@ import { Mascot } from "@/components/mascot";
 import { cn } from "@/lib/cn";
 import { drawOutcomeNow, GACHA_ODDS, type GachaOutcome } from "@/lib/gacha";
 
-const SITE = "https://buzzme.m31-ulinnuha.workers.dev";
+const SITE = "https://thebuzzme.bond";
 const SHARE_TEXT = "Climbing the BuzzMe billboard on Monad. Pay to rank, or share to try gacha.";
 
 function shareLinks(address: string | undefined) {

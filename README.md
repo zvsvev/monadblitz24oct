@@ -1,7 +1,7 @@
 # BuzzMe
 
 A billboard on Monad where **you pay to be on top**, and a daily gacha for people who
-**share the board**. Styled like Duolingo: bright, chunky, and fun to open.
+**share the board**. Styled like a game: bright, chunky, and fun to open.
 
 BuzzMe is live on the **Monad testnet**, a practice network where the money is not real. Try it,
 break it, have fun with it.
@@ -65,7 +65,7 @@ project was built with [MONSKILLS](./skills).
 # BuzzMe (Bahasa Indonesia)
 
 Sebuah papan reklame di Monad di mana **kamu membayar untuk berada di atas**, dan gacha harian untuk
-orang yang **membagikan papan ini**. Tampilannya seperti aplikasi Duolingo: cerah, gemuk, dan seru
+orang yang **membagikan papan ini**. Tampilannya seperti sebuah game: cerah, gemuk, dan seru
 dibuka.
 
 BuzzMe berjalan di **Monad testnet**, jaringan latihan di mana uangnya bukan uang sungguhan.

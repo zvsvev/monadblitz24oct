@@ -36,7 +36,7 @@
 }
 
 @layer components {
-  /* The chunky 3D button, Duolingo's signature, in Monad purple. */
+  /* The chunky 3D button with a hard edge, in Monad purple. */
   .btn {
     display: inline-flex;
     align-items: center;

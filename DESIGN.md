@@ -1,7 +1,7 @@
 ---
 version: 1.2
 name: BuzzMe-design-system
-description: "A playful game surface borrowed from the Duolingo app and painted in Monad purple: one confident action color (#836EF9) for every button and CTA, a friendly rounded type stack (Nunito), and chunky 16px cards with buttons that sit on a 4px darker edge and press down when tapped. Gold is reserved for the streak, the #1 rank and the gacha highlight; green appears exactly once, on the landing gacha CTA, so it reads apart from List; red is only for wrong or super zonk. The board reads like a leaderboard in a game you can win, not a table you inspect."
+description: "A playful game surface borrowed from friendly mobile game UI and painted in Monad purple: one confident action color (#836EF9) for every button and CTA, a friendly rounded type stack (Nunito), and chunky 16px cards with buttons that sit on a 4px darker edge and press down when tapped. Gold is reserved for the streak, the #1 rank and the gacha highlight; green appears exactly once, on the landing gacha CTA, so it reads apart from List; red is only for wrong or super zonk. The board reads like a leaderboard in a game you can win, not a table you inspect."
 colors:
   primary: "#836EF9"
   primary-pressed: "#6D57D8"
@@ -268,7 +268,7 @@ components:
 
 BuzzMe does not look like the market it belongs to. Every other pay-to-rank board, and the surface
 that inspired this one (outbid.lol), reads as dark, dense and clinical. BuzzMe takes the opposite tack
-and borrows the entire feel of the **Duolingo app**, painted in **Monad purple**: one confident
+and borrows the entire feel of a **friendly mobile game**, painted in **Monad purple**: one confident
 **Monad Purple** (`{colors.primary}` #836EF9), chunky rounded geometry, a mascot who reacts to you,
 streaks, and big candy buttons that visibly press down when tapped.
 
@@ -291,7 +291,7 @@ generic gray. Red is used for exactly one meaning: wrong, rejected, or super zon
 - **Chunky, rounded, bordered.** Cards and rows use `{rounded.lg}` 16px with a 2px border, never a
   shadow. The only shadow in the system is the flat 4px edge under a button.
 - **Buttons sit on an edge and press down.** Every button carries a solid `0 4px 0 <edge>` shadow that
-  collapses to `0 0 0` on press, so the button physically moves. This is the Duolingo signature.
+  collapses to `0 0 0` on press, so the button physically moves. This is the signature of the style.
 - **Rounded, heavy type.** Nunito at weight 800 for display and button, 600 for body. Headlines are
   bold and friendly, never thin.
 - **Numbers in pills.** Rank, spend, pot, streak and level all render as rounded pills
@@ -339,8 +339,9 @@ generic gray. Red is used for exactly one meaning: wrong, rejected, or super zon
 
 ## Typography
 
-**Nunito** carries the whole hierarchy, as the free, rounded stand-in for Duolingo's proprietary
-Feather. Display sizes run at weight **800**, the heavy friendly headline treatment; body sits at 600
+**Nunito** carries the whole hierarchy, as a free, rounded stand-in for the proprietary display face
+used by most friendly mobile games. Display sizes run at weight **800**, the heavy friendly headline
+treatment; body sits at 600
 for legibility at small sizes. The voice is warm, short and encouraging.
 
 - **Display** (48 / 40 / 32px, 800): hero and page titles, the prize reveal.
@@ -400,7 +401,8 @@ takes more than a second to celebrate.
 
 ## Voice
 
-Warm, short, and a little playful, in the Duolingo register: congratulate wins, soften losses, never
+Warm, short, and a little playful, in a warm game-like register: congratulate wins, soften losses,
+never
 lecture.
 
 - Do: "You are #3. Two more USDC and you take the board."

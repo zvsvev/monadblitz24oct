@@ -69,8 +69,8 @@ bash -c 'source ~/.cloudflare/load-cf.sh FISHEE; npm run deploy'
 `npm run deploy` builds the Next.js app, transforms it with OpenNext, and deploys with Wrangler. Do
 **not** enable Next.js `cacheComponents`: the Workers runtime's `setTimeout()` implementation makes it
 hang (error 1101). Runtime secrets for the Worker (the Privy app id, the D1 binding,
-`PAYER_PRIVATE_KEY`) go in as Wrangler secrets. Do not attach a custom domain; the worker stays on
-`*.workers.dev`.
+`PAYER_PRIVATE_KEY`) go in as Wrangler secrets. The Worker serves the custom domain
+`thebuzzme.bond` (plus `www`), declared as `routes` in `wrangler.jsonc`.
 
 ## Provenance
 

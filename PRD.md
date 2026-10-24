@@ -18,9 +18,9 @@ BuzzMe once a day and you earn a **gacha spin**, with a small chance of a USDC p
 larger chance of nothing at all. The gacha pot is funded by **50% of every placement payment**, so
 the reward tracks the board's real revenue instead of printed emissions.
 
-**The whole surface is dressed like Duolingo, in Monad purple:** one confident purple, chunky rounded
-cards, big friendly buttons, a mascot, streaks, and a celebration when you win. The board is meant to
-be fun to open, not a table to be read.
+**The whole surface is dressed like a friendly mobile game, in Monad purple:** one confident purple,
+chunky rounded cards, big friendly buttons, a mascot, streaks, and a celebration when you win. The
+board is meant to be fun to open, not a table to be read.
 
 ### 0.1 The one-sentence version
 
@@ -52,10 +52,11 @@ into.
 rewards the habit of coming back: show up, share, spin, come back tomorrow. The streak is the product,
 the prizes are the seasoning.
 
-**Why Duolingo as the design language.** Pay-to-rank boards are inherently a little cold and
-mechanical. Borrowing Duolingo's warmth (rounded shapes, one confident green, playful type, a mascot
-who reacts to you) makes the board feel like a game you can win rather than a spreadsheet that ranks
-you. That contrast is the point: a serious mechanism, wrapped in something friendly.
+**Why a game UI as the design language.** Pay-to-rank boards are inherently a little cold and
+mechanical. Borrowing the warmth of a friendly mobile game (rounded shapes, one confident purple,
+playful type, a mascot who reacts to you) makes the board feel like a game you can win rather than a
+spreadsheet that ranks you. That contrast is the point: a serious mechanism, wrapped in something
+friendly.
 
 **Why Monad.** Pay-to-rank means many small payments at human speed: a placement, an outbid, a gacha
 payout, each needing to clear without a modal and a fee that dwarfs the amount. Monad's 400ms blocks
@@ -184,7 +185,7 @@ reason to matter.
 
 ### 4.5 The streaks
 
-Daily shares build a streak, shown as a Duolingo-style flame count in the profile next to the gacha. The streak is cosmetic for the Blitz (it gates nothing yet); the obvious next step is a
+Daily shares build a streak, shown as a flame-style count in the profile next to the gacha. The streak is cosmetic for the Blitz (it gates nothing yet); the obvious next step is a
 small odds boost, listed in §10.
 
 ---
@@ -360,4 +361,4 @@ below funding.
   billboard on Monad: any project, ad, or link can pay in MON or testnet USDC to stand higher on three
   boards (All-time, Today, Daily). 50% of placement revenue funds a daily share-gacha whose prizes are
   MON, big MON, USDC, big USDC, zonk, and super zonk (which records a share debt). The surface is
-  styled after the Duolingo app. Scope is Monad testnet; open decisions sit in §10.
+  styled after a friendly mobile game. Scope is Monad testnet; open decisions sit in §10.
