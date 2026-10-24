@@ -1,5 +1,5 @@
--- Supaboard off-chain state (Cloudflare D1).
--- Apply with: wrangler d1 execute supaboard --file=./d1/schema.sql --remote
+-- BuzzMe off-chain state (Cloudflare D1).
+-- Apply with: wrangler d1 execute buzzme --file=./d1/schema.sql --remote
 
 CREATE TABLE IF NOT EXISTS shares (
   address  TEXT NOT NULL,

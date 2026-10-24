@@ -2,7 +2,7 @@
 pragma solidity ^0.8.28;
 
 import {Script, console} from "forge-std/Script.sol";
-import {Supaboard} from "../src/Supaboard.sol";
+import {BuzzMe} from "../src/BuzzMe.sol";
 import {GachaPot} from "../src/GachaPot.sol";
 
 /// @notice Reference deploy script. The Blitz deploy goes through an Alchemy Agent Wallet session
@@ -20,12 +20,12 @@ contract Deploy is Script {
         vm.startBroadcast();
 
         GachaPot pot = new GachaPot(owner, payer);
-        Supaboard board = new Supaboard(owner, address(pot), treasury);
+        BuzzMe board = new BuzzMe(owner, address(pot), treasury);
 
         vm.stopBroadcast();
 
         console.log("GachaPot   ", address(pot));
-        console.log("Supaboard  ", address(board));
+        console.log("BuzzMe  ", address(board));
         console.log("owner      ", owner);
         console.log("treasury   ", treasury);
         console.log("payer      ", payer);

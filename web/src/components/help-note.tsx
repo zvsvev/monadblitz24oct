@@ -24,7 +24,7 @@ export function HelpNote({
         aria-label={`Help: ${title}`}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-swan text-xs font-extrabold text-hare hover:border-macaw hover:text-macaw"
+        className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-swan text-xs font-extrabold text-hare hover:border-mon hover:text-mon"
       >
         ?
       </button>

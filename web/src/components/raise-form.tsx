@@ -48,7 +48,7 @@ export function RaiseForm({ listingKey }: { listingKey: `0x${string}` }) {
           onChange={(e) => setAmount(e.target.value)}
         />
         <button
-          className="btn btn-green shrink-0"
+          className="btn btn-mon shrink-0"
           type="button"
           disabled={busy || !isDeployed || !isConnected || Number(amount) <= 0}
           onClick={submit}
@@ -65,7 +65,7 @@ export function RaiseForm({ listingKey }: { listingKey: `0x${string}` }) {
         <p className="mt-2 text-xs font-bold text-wolf">Connect a wallet to raise.</p>
       )}
       {address && <p className="mt-2 text-xs font-bold text-hare">Paying as {address}</p>}
-      {status && <p className="mt-2 text-xs font-bold text-macaw">{status}</p>}
+      {status && <p className="mt-2 text-xs font-bold text-mon">{status}</p>}
     </div>
   );
 }

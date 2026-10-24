@@ -21,7 +21,7 @@ export default function BoardDetailPage() {
     return (
       <div className="card flex flex-col gap-2">
         <p className="text-sm font-bold text-wolf">This listing is not on the board.</p>
-        <Link href="/" className="btn btn-green btn-sm w-fit">
+        <Link href="/" className="btn btn-mon btn-sm w-fit">
           Back to the board
         </Link>
       </div>
@@ -40,7 +40,7 @@ export default function BoardDetailPage() {
             href={listing.url}
             target="_blank"
             rel="noreferrer"
-            className="truncate text-xs font-bold text-macaw"
+            className="truncate text-xs font-bold text-mon"
           >
             {displayUrl(listing.url)}
           </a>

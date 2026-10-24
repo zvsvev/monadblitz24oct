@@ -3,29 +3,27 @@
 @theme {
   --font-sans: var(--font-nunito), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     sans-serif;
-  --color-feather: #58cc02;
-  --color-feather-dark: #46a302;
-  --color-feather-edge: #58a700;
-  --color-macaw: #1cb0f6;
-  --color-macaw-dark: #1899d6;
-  --color-cardinal: #ff4b4b;
-  --color-cardinal-dark: #ea2b2b;
+  /* Monad purple is the one action color. */
+  --color-mon: #836ef9;
+  --color-mon-dark: #6d57d8;
+  --color-mon-edge: #5b46c4;
+  --color-lav: #c4b5fd;
   --color-bee: #ffc800;
   --color-bee-dark: #e5a100;
-  --color-beetle: #ce82ff;
-  --color-beetle-dark: #a568cc;
-  --color-eel: #4b4b4b;
-  --color-wolf: #777777;
-  --color-hare: #afafaf;
-  --color-swan: #e5e5e5;
-  --color-polar: #f7f7f7;
-  --color-ink: #131f24;
+  --color-cardinal: #ff4b4b;
+  --color-cardinal-dark: #ea2b2b;
+  --color-eel: #2a2342;
+  --color-wolf: #6b6480;
+  --color-hare: #a7a1ba;
+  --color-swan: #e8e5f4;
+  --color-polar: #f7f6fc;
+  --color-ink: #12101d;
 }
 
 @layer base {
   body {
     background: #ffffff;
-    color: #4b4b4b;
+    color: #2a2342;
     font-family: var(--font-sans);
     font-weight: 600;
   }
@@ -38,7 +36,7 @@
 }
 
 @layer components {
-  /* The chunky 3D button, Duolingo's signature. */
+  /* The chunky 3D button, Duolingo's signature, in Monad purple. */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -55,8 +53,8 @@
     text-transform: uppercase;
     cursor: pointer;
     color: #ffffff;
-    background: #58cc02;
-    box-shadow: 0 4px 0 var(--btn-shadow, #46a302);
+    background: #836ef9;
+    box-shadow: 0 4px 0 var(--btn-shadow, #5b46c4);
     transition: filter 0.1s ease, transform 0.05s ease, box-shadow 0.05s ease;
   }
   .btn:hover:not(:disabled) {
@@ -64,7 +62,7 @@
   }
   .btn:active:not(:disabled) {
     transform: translateY(2px);
-    box-shadow: 0 2px 0 var(--btn-shadow, #46a302);
+    box-shadow: 0 2px 0 var(--btn-shadow, #5b46c4);
   }
   .btn:disabled {
     opacity: 0.5;
@@ -76,42 +74,34 @@
     border-radius: 12px;
     letter-spacing: 0.6px;
   }
-  .btn-green {
-    background: #58cc02;
-    --btn-shadow: #46a302;
+  .btn-mon {
+    background: #836ef9;
+    --btn-shadow: #5b46c4;
   }
-  .btn-blue {
-    background: #1cb0f6;
-    --btn-shadow: #1899d6;
+  .btn-gacha {
+    background: linear-gradient(135deg, #9b7bff, #6d57d8);
+    --btn-shadow: #4a3799;
   }
-  .btn-red {
-    background: #ff4b4b;
-    --btn-shadow: #ea2b2b;
-  }
-  .btn-yellow {
+  .btn-gold {
     background: #ffc800;
-    color: #4b4b4b;
+    color: #2a2342;
     --btn-shadow: #e5a100;
-  }
-  .btn-purple {
-    background: #ce82ff;
-    --btn-shadow: #a568cc;
   }
   .btn-ghost {
     background: #ffffff;
-    color: #1cb0f6;
-    border: 2px solid #e5e5e5;
-    --btn-shadow: #e5e5e5;
+    color: #6d57d8;
+    border: 2px solid #e8e5f4;
+    --btn-shadow: #e8e5f4;
   }
   .btn-gray {
-    background: #e5e5e5;
-    color: #777777;
-    --btn-shadow: #d4d4d4;
+    background: #e8e5f4;
+    color: #6b6480;
+    --btn-shadow: #d6d1e8;
   }
 
   .card {
     background: #ffffff;
-    border: 2px solid #e5e5e5;
+    border: 2px solid #e8e5f4;
     border-bottom-width: 4px;
     border-radius: 16px;
     padding: 1.25rem;
@@ -122,14 +112,14 @@
     align-items: center;
     gap: 0.85rem;
     background: #ffffff;
-    border: 2px solid #e5e5e5;
+    border: 2px solid #e8e5f4;
     border-bottom-width: 4px;
     border-radius: 16px;
     padding: 0.75rem 0.9rem;
     transition: transform 0.15s ease, border-color 0.15s ease;
   }
   .list-row:hover {
-    border-color: #d4d4d4;
+    border-color: #d6d1e8;
     transform: translateY(-1px);
   }
 
@@ -140,15 +130,15 @@
     min-width: 2.4rem;
     height: 2.4rem;
     border-radius: 12px;
-    background: #f7f7f7;
-    color: #777777;
+    background: #f7f6fc;
+    color: #6b6480;
     font-size: 1.1rem;
     font-weight: 800;
     font-variant-numeric: tabular-nums;
   }
   .rank-badge-top {
     background: #ffc800;
-    color: #4b4b4b;
+    color: #2a2342;
   }
 
   .pill {
@@ -167,8 +157,8 @@
     align-items: center;
     gap: 0.4rem;
     border-radius: 9999px;
-    background: #f7f7f7;
-    color: #777777;
+    background: #f7f6fc;
+    color: #6b6480;
     padding: 0.3rem 0.8rem;
     font-size: 0.72rem;
     font-weight: 800;
@@ -182,27 +172,27 @@
     font-weight: 800;
     letter-spacing: 0.6px;
     text-transform: uppercase;
-    color: #777777;
+    color: #6b6480;
     background: #ffffff;
-    border: 2px solid #e5e5e5;
+    border: 2px solid #e8e5f4;
     cursor: pointer;
   }
   .tab-selected {
     color: #ffffff;
-    background: #1cb0f6;
-    border-color: #1899d6;
+    background: #836ef9;
+    border-color: #6d57d8;
   }
 
   .gacha-card {
-    background: #ce82ff;
+    background: linear-gradient(135deg, #836ef9, #5b46c4);
     color: #ffffff;
     border-radius: 24px;
     padding: 1.75rem;
-    box-shadow: 0 6px 0 #a568cc;
+    box-shadow: 0 6px 0 #4a3799;
   }
   .prize-reveal {
     background: #ffffff;
-    border: 3px solid #58cc02;
+    border: 3px solid #836ef9;
     border-radius: 24px;
     padding: 2rem;
     text-align: center;
@@ -213,18 +203,18 @@
 
   .input {
     width: 100%;
-    border: 2px solid #e5e5e5;
+    border: 2px solid #e8e5f4;
     border-radius: 14px;
-    background: #f7f7f7;
+    background: #f7f6fc;
     padding: 0.7rem 0.9rem;
     font-family: inherit;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #4b4b4b;
+    color: #2a2342;
     outline: none;
   }
   .input:focus {
-    border-color: #1cb0f6;
+    border-color: #836ef9;
     background: #ffffff;
   }
   .input:disabled {

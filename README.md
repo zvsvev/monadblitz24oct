@@ -1,9 +1,9 @@
-# Supaboard
+# BuzzMe
 
 A billboard on Monad where **you pay to be on top**, and a daily gacha for people who
 **share the board**. Styled like Duolingo: bright, chunky, and fun to open.
 
-Supaboard is live on the **Monad testnet**, a practice network where the money is not real. Try it,
+BuzzMe is live on the **Monad testnet**, a practice network where the money is not real. Try it,
 break it, have fun with it.
 
 ---
@@ -14,7 +14,7 @@ break it, have fun with it.
   leaderboard. The more you pay, the higher you stand.
 - **Knock someone off the top.** Want the number one spot? Pay more than the person on top. The board
   updates in about a second.
-- **Play the daily gacha.** Share Supaboard with a friend once a day and you unlock one spin. You can
+- **Play the daily gacha.** Share BuzzMe with a friend once a day and you unlock one spin. You can
   win MON or USDC, or get a "zonk" (nothing), or a "super zonk" (share again to keep playing).
 - **Build a streak.** Share every day to keep your flame alive.
 
@@ -25,7 +25,7 @@ part.
 
 ## How to use it
 
-1. Open the site and **connect a wallet**. If you do not have one, Supaboard can make you one with just
+1. Open the site and **connect a wallet**. If you do not have one, BuzzMe can make you one with just
    an email or a passkey, no extension needed.
 2. To list something: click **List**, paste a link, add a title, choose MON or USDC, and confirm.
    Your listing appears on the board with a rank.
@@ -35,11 +35,11 @@ part.
 5. Check **Dashboard** for your listings, your streak, your spins, and anything you win (with a link to
    the public record of every payout).
 
-New here? Read **How it works** inside the app for the ground rules.
+New here? Read the **Docs** in the app for the ground rules.
 
 ---
 
-## What Supaboard is not
+## What BuzzMe is not
 
 - **Not real money.** Everything runs on the Monad testnet. The MON and the USDC here are test tokens
   with no value. Nothing here is an investment.
@@ -61,13 +61,13 @@ project was built with [MONSKILLS](./skills).
 
 ---
 
-# Supaboard (Bahasa Indonesia)
+# BuzzMe (Bahasa Indonesia)
 
 Sebuah papan reklame di Monad di mana **kamu membayar untuk berada di atas**, dan gacha harian untuk
 orang yang **membagikan papan ini**. Tampilannya seperti aplikasi Duolingo: cerah, gemuk, dan seru
 dibuka.
 
-Supaboard berjalan di **Monad testnet**, jaringan latihan di mana uangnya bukan uang sungguhan.
+BuzzMe berjalan di **Monad testnet**, jaringan latihan di mana uangnya bukan uang sungguhan.
 Silakan dicoba, dirusak, dan dinikmati.
 
 ---
@@ -78,7 +78,7 @@ Silakan dicoba, dirusak, dan dinikmati.
   papan peringkat. Semakin besar yang kamu bayar, semakin tinggi posisimu.
 - **Geser orang dari posisi pertama.** Mau jadi nomor satu? Bayar lebih besar daripada yang di atas.
   Papan berubah dalam sekitar satu detik.
-- **Mainkan gacha harian.** Bagikan Supaboard ke teman sekali sehari dan kamu dapat satu kesempatan
+- **Mainkan gacha harian.** Bagikan BuzzMe ke teman sekali sehari dan kamu dapat satu kesempatan
   memutar. Kamu bisa menang MON atau USDC, atau dapat "zonk" (tidak dapat apa-apa), atau "super zonk"
   (bagikan lagi supaya bisa lanjut main).
 - **Jaga runtutan (streak).** Bagikan setiap hari agar api streak-mu tetap menyala.
@@ -89,7 +89,7 @@ Itu inti idenya: bayar untuk naik papan, atau bagikan untuk coba gacha. Kamu tid
 
 ## Cara memakai
 
-1. Buka situsnya dan **sambungkan dompet (wallet)**. Kalau belum punya, Supaboard bisa membuatkan
+1. Buka situsnya dan **sambungkan dompet (wallet)**. Kalau belum punya, BuzzMe bisa membuatkan
    untukmu cukup dengan email atau passkey, tanpa perlu ekstensi.
 2. Mau memasang sesuatu: klik **List**, tempel tautan, isi judul, pilih MON atau USDC, lalu konfirmasi.
    Pasanganmu akan muncul di papan dengan peringkat.
@@ -99,11 +99,11 @@ Itu inti idenya: bayar untuk naik papan, atau bagikan untuk coba gacha. Kamu tid
 5. Cek **Dashboard** untuk melihat pasanganmu, streak-mu, putaranmu, dan apa pun yang kamu menangkan
    (lengkap dengan tautan ke catatan publik tiap pembayaran).
 
-Baru di sini? Buka **How it works** di dalam aplikasi untuk aturan dasarnya.
+Baru di sini? Buka **Docs** di dalam aplikasi untuk aturan dasarnya.
 
 ---
 
-## Yang Supaboard bukan
+## Yang BuzzMe bukan
 
 - **Bukan uang sungguhan.** Semuanya berjalan di Monad testnet. MON dan USDC di sini adalah token uji
   tanpa nilai. Tidak ada investasi di sini.

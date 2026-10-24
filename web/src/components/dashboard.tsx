@@ -52,7 +52,7 @@ export function Dashboard() {
         {mine.length === 0 ? (
           <div className="card text-sm font-bold text-wolf">
             Nothing yet.{" "}
-            <Link href="/list" className="text-macaw">
+            <Link href="/list" className="text-mon">
               List your first project.
             </Link>
           </div>
@@ -65,10 +65,10 @@ export function Dashboard() {
                     <p className="truncate text-sm font-extrabold text-eel">{l.title}</p>
                     <p className="truncate text-xs font-bold text-hare">{displayUrl(l.url)}</p>
                   </div>
-                  <span className="pill bg-feather/10 text-feather-dark">
+                  <span className="pill bg-mon/10 text-mon-dark">
                     {formatUsd(l.totalUsd)}
                   </span>
-                  <Link href={`/board/${l.key}`} className="btn btn-blue btn-sm">
+                  <Link href={`/board/${l.key}`} className="btn btn-mon btn-sm">
                     Raise
                   </Link>
                 </div>
@@ -83,7 +83,7 @@ export function Dashboard() {
         {spins.length === 0 ? (
           <div className="card text-sm font-bold text-wolf">
             No spins yet.{" "}
-            <Link href="/gacha" className="text-macaw">
+            <Link href="/gacha" className="text-mon">
               Share and spin the chest.
             </Link>
           </div>
@@ -93,7 +93,7 @@ export function Dashboard() {
               <li key={`${s.day}-${i}`} className="list-row">
                 <span className="pill bg-polar text-wolf">{s.day}</span>
                 <span className="flex-1 text-sm font-extrabold text-eel">{s.outcome}</span>
-                {s.tx_hash && <span className="pill bg-macaw/10 text-macaw">on-chain</span>}
+                {s.tx_hash && <span className="pill bg-mon/10 text-mon">on-chain</span>}
               </li>
             ))}
           </ul>

@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "supaboard",
+  "name": "buzzme",
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-01-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -11,7 +11,7 @@
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "supaboard"
+      "service": "buzzme"
     }
   ],
   "observability": {
@@ -20,6 +20,6 @@
   // Off-chain store. Enable after creating the D1 database and putting its id here:
   // (the deploy token needs D1: Edit, or create the database in the dashboard).
   // "d1_databases": [
-  //   { "binding": "DB", "database_name": "supaboard", "database_id": "<D1_DATABASE_ID>" }
+  //   { "binding": "DB", "database_name": "buzzme", "database_id": "<D1_DATABASE_ID>" }
   // ]
 }

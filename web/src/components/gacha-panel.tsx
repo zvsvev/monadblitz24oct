@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { useAccount } from "wagmi";
-import { HelpNote } from "@/components/help-note";
 import { Mascot } from "@/components/mascot";
 import { cn } from "@/lib/cn";
 import { drawDemoSpinNow, type DemoOutcome } from "@/lib/demo";
 
-const SITE = "https://supaboard.m31-ulinnuha.workers.dev";
-const SHARE_TEXT = "Climbing the Supaboard billboard on Monad. Pay to rank, or share to spin the chest.";
+const SITE = "https://buzzme.m31-ulinnuha.workers.dev";
+const SHARE_TEXT = "Climbing the BuzzMe billboard on Monad. Pay to rank, or share to try gacha.";
 
 function shareLinks(address: string | undefined) {
   const referral = address ? `${SITE}/?ref=${address}` : SITE;
@@ -38,10 +37,10 @@ export function GachaPanel() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ address }),
       });
-      const data = (await res.json()) as { ok?: boolean; count?: number; error?: string };
+      const data = (await res.json()) as { ok?: boolean; error?: string };
       if (data.ok) {
         setShared(true);
-        setNote(`Share recorded. Streak count today: ${data.count}.`);
+        setNote(null);
       } else {
         setNote(data.error ?? "Could not record the share.");
       }
@@ -67,7 +66,7 @@ export function GachaPanel() {
         setSpun(true);
         setNote(null);
       } else {
-        setNote(data.error ?? "The chest is locked.");
+        setNote(data.error ?? "The gacha is locked.");
       }
     } catch {
       setNote("Could not reach the server.");
@@ -76,7 +75,6 @@ export function GachaPanel() {
     }
   }
 
-  // A local preview draw so the page is playable even before the API/binding is set up.
   function preview() {
     setOutcome(drawDemoSpinNow());
   }
@@ -87,34 +85,19 @@ export function GachaPanel() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="gacha-card">
-        <div className="flex items-center gap-3">
-          <Mascot className="h-14 w-14" />
-          <div>
-            <p className="text-xl font-extrabold">The daily chest</p>
-            <p className="text-sm font-bold text-white/90">
-              Share Supaboard once a day, then spin for MON, USDC, or a zonk.
-            </p>
-          </div>
-          <span className="ml-auto">
-            <HelpNote title="Fairness">
-              The draw uses a simple commit-and-reveal, which is checkable but not a certified random
-              number generator. Prizes are capped by the pot, and most spins are a zonk.
-            </HelpNote>
-          </span>
-        </div>
+      <div className="gacha-card flex items-center gap-3">
+        <Mascot className="h-12 w-12" />
+        <p className="text-xl font-extrabold">Daily gacha</p>
       </div>
 
       {!isConnected && (
         <p className="rounded-xl bg-polar px-3 py-2 text-xs font-bold text-wolf">
-          Connect a wallet to record your share and spin.
+          Connect a wallet to share and spin.
         </p>
       )}
 
       <div className="card">
-        <p className="mb-2 text-xs font-extrabold uppercase tracking-wider text-wolf">
-          1. Share the board
-        </p>
+        <p className="mb-2 text-xs font-extrabold uppercase tracking-wider text-wolf">1. Share</p>
         <div className="flex flex-wrap gap-2">
           {links.map((l) => (
             <a
@@ -129,31 +112,24 @@ export function GachaPanel() {
             </a>
           ))}
         </div>
-        <p className="mt-2 text-xs font-bold text-hare">
-          Opening a share link records your daily entry. One share, one spin, every day.
-        </p>
       </div>
 
       <div className="card">
         <p className="mb-2 text-xs font-extrabold uppercase tracking-wider text-wolf">2. Spin</p>
         <div className="flex flex-wrap gap-2">
           <button
-            className="btn btn-purple"
+            className="btn btn-gacha"
             disabled={busy || !isConnected || !shared || spun}
             onClick={spin}
             type="button"
           >
-            {busy ? "Spinning…" : spun ? "Spun today" : shared ? "Spin the chest" : "Share first"}
+            {busy ? "Spinning…" : spun ? "Spun today" : shared ? "Spin" : "Share first"}
           </button>
           <button className="btn btn-gray btn-sm" onClick={preview} type="button">
-            Preview a spin
+            Preview
           </button>
         </div>
-        <p className="mt-2 text-xs font-bold text-hare">
-          Demo build: the daily limit and the share debt are tracked in this browser session. With
-          the database connected they hold per wallet per UTC day.
-        </p>
-        {note && <p className="mt-2 text-xs font-bold text-macaw">{note}</p>}
+        {note && <p className="mt-2 text-xs font-bold text-mon">{note}</p>}
       </div>
 
       {outcome && (
@@ -170,11 +146,6 @@ export function GachaPanel() {
           {outcome.tone === "debt" && (
             <p className="mt-3 text-xs font-bold text-cardinal">
               Share again before your next spin unlocks.
-            </p>
-          )}
-          {outcome.tone === "big" && (
-            <p className="mt-3 text-xs font-bold text-feather-dark">
-              A big one. Paid on-chain from the chest.
             </p>
           )}
         </div>

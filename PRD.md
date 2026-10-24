@@ -1,25 +1,25 @@
-# PRD: Supaboard: Pay-to-Rank Billboards and a Daily Share-Gacha on Monad
+# PRD: BuzzMe: Pay-to-Rank Billboards and a Daily Share-Gacha on Monad
 
-**Version:** 1.1 · **Date:** 24 Oct 2026
-**Supersedes:** v1.0. v1.1 moves the gacha inside the user profile (there is no separate gacha page)
-and settles the landing copy: the call to action reads "Try gacha".
+**Version:** 1.2 · **Date:** 24 Oct 2026
+**Supersedes:** v1.1. v1.2 renames the product to **BuzzMe** and repaints the surface in **Monad
+purple** (the green accent is gone); the design system is versioned in DESIGN.md.
 
 ---
 
-## 0. What Supaboard is
+## 0. What BuzzMe is
 
-**Supaboard is a pay-to-rank billboard on Monad.** Anyone can put a project, an ad, or a link on the
+**BuzzMe is a pay-to-rank billboard on Monad.** Anyone can put a project, an ad, or a link on the
 board and stand above everyone else by paying in **MON or testnet USDC**. Rank is what you pay, and
 nothing else. Three boards slice the same spend by time window: **All-time**, **Today**, and **Daily**.
 
 **Nobody has to pay to take part.** A second loop rewards the people who promote the board: share
-Supaboard once a day and you earn a **gacha spin**, with a small chance of MON or USDC and a much
+BuzzMe once a day and you earn a **gacha spin**, with a small chance of MON or USDC and a much
 larger chance of nothing at all. The gacha pool is funded by **50% of every placement payment**, so
 the reward tracks the board's real revenue instead of printed emissions.
 
-**The whole surface is dressed like Duolingo:** bright green, chunky rounded cards, big friendly
-buttons, a mascot, streaks, and a celebration when you win. The board is meant to be fun to open, not
-a table to be read.
+**The whole surface is dressed like Duolingo, in Monad purple:** one confident purple, chunky rounded
+cards, big friendly buttons, a mascot, streaks, and a celebration when you win. The board is meant to
+be fun to open, not a table to be read.
 
 ### 0.1 The one-sentence version
 
@@ -67,7 +67,7 @@ compatible, so the standard tooling (Solidity, Foundry, wagmi) works unchanged.
 
 ### 2.1 Listing
 
-1. **Connect a wallet.** Any EVM wallet, or a Para embedded wallet created with email or a passkey.
+1. **Connect a wallet.** Any EVM wallet, or a Privy embedded wallet created with email or a passkey.
 2. **Describe the placement.** A URL or X handle, a title, an optional image URL, and a category.
 3. **Pay.** Choose MON (native) or testnet USDC, and an amount. This amount becomes your rank.
 4. **Appear on the board.** The listing is live as soon as the payment settles (about 800ms on Monad).
@@ -210,8 +210,8 @@ built are said plainly in §7 and §8.
 
 ```text
 monadblitz24oct/
-├── contracts/      # Foundry: Supaboard (pay-to-rank), GachaPot (+ tests, script/Deploy.s.sol)
-├── web/            # Next.js App Router + shadcn + wagmi + Para; D1 for off-chain state
+├── contracts/      # Foundry: BuzzMe (pay-to-rank), GachaPot (+ tests, script/Deploy.s.sol)
+├── web/            # Next.js App Router + Tailwind + wagmi + Privy; D1 for off-chain state
 ├── web/d1/         # schema.sql: listings metadata, shares, spins
 ├── indexer/        # (optional) Envio HyperIndex activity feed
 └── skills/         # MONSKILLS
@@ -228,14 +228,15 @@ monadblitz24oct/
 
 **Contracts (Monad testnet):**
 
-- **`Supaboard`** receives placements, records spend, enforces the rank rules, and routes the 50/50
+- **`BuzzMe`** receives placements, records spend, enforces the rank rules, and routes the 50/50
   split. It accepts native MON and any ERC-20 (testnet USDC), and normalizes MON to a USD score through
   a price seam the owner can point at a real feed.
 - **`GachaPot`** holds the reward pool and pays winners after a commit-reveal, with a solvency check
   per token. Payouts are bounded by the pot balance at all times.
 
 **Stack.** Frontend on Next.js (App Router) with shadcn and Tailwind v4, wagmi v3 and viem for chain
-reads and writes, and **Para** for wallets (embedded MPC plus external connect). Off-chain state on
+reads and writes, and **Privy** for wallets (email, passkey and social login plus external connect).
+Off-chain state on
 Cloudflare D1. Contracts built with Foundry and deployed as CREATE2 through the canonical **CreateX**
 factory using an Alchemy Agent Wallet session, then verified through the monskills verification API.
 The frontend deploys to **Cloudflare Workers** through OpenNext.
@@ -250,7 +251,7 @@ The frontend deploys to **Cloudflare Workers** through OpenNext.
 
 **Must-have (the demo):**
 
-- Wallet connect (Para) and a connected board.
+- Wallet connect (Privy) and a connected board.
 - Listing with a real on-chain payment in MON or in testnet USDC (approve plus list).
 - The three boards (All-time, Today, Daily) with correct on-chain ranking, and raising your own rank.
 - The 50/50 split verified on-chain (pot balance rises, treasury receives its half).
@@ -315,7 +316,7 @@ below funding.
 | Super zonk | Pays nothing and records a share debt: share again before the next spin. |
 | Ranking unit | USD-normalized score, with an owner-set MON rate for the demo. |
 | Docs and copy | The PRD and the DESIGN are English; the README is English and Indonesian. |
-| Product name | **Supaboard**. |
+| Product name | **BuzzMe**. |
 
 **Still open:**
 
@@ -334,11 +335,17 @@ below funding.
 
 ## 11. Revision history
 
+- **v1.2 (24 Oct 2026)**: Renamed the product from Supaboard to **BuzzMe**. The surface moved from the
+  green accent to **Monad purple** (#836EF9), with a lavender-tinted neutral palette, gold kept for
+  streaks, the #1 rank and the gacha highlight, and red kept only for wrong and super zonk. Contracts
+  renamed (`BuzzMe.sol`), the Cloudflare worker is now `buzzme`, and the environment variable is
+  `NEXT_PUBLIC_BUZZME`. Wallets moved from Para to **Privy** (`NEXT_PUBLIC_PRIVY_APP_ID`), with an
+  injected-wallet fallback so the app renders without a key.
 - **v1.1 (24 Oct 2026)**: The gacha moved out of a standalone page and into the user profile, where
   it sits beside the listings and the spin history. Landing copy settled: "Try gacha" replaces the
   earlier chest wording, and the board's key facts (pot, share daily, rank = what you pay) moved into
   an in-board help note. Implementation matches this version.
-- **v1.0 (24 Oct 2026)**: First specification, written for Monad Blitz. Supaboard is a pay-to-rank
+- **v1.0 (24 Oct 2026)**: First specification, written for Monad Blitz. BuzzMe is a pay-to-rank
   billboard on Monad: any project, ad, or link can pay in MON or testnet USDC to stand higher on three
   boards (All-time, Today, Daily). 50% of placement revenue funds a daily share-gacha whose prizes are
   MON, big MON, USDC, big USDC, zonk, and super zonk (which records a share debt). The surface is

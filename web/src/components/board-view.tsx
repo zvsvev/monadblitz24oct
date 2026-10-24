@@ -126,8 +126,8 @@ function RankRow({ rank, listing }: { rank: number; listing: BoardListing }) {
         <p className="truncate text-sm font-extrabold text-eel">{listing.title}</p>
         <p className="truncate text-xs font-bold text-hare">{displayUrl(listing.url)}</p>
       </div>
-      <span className="pill bg-feather/10 text-feather-dark">{formatUsd(listing.totalUsd)}</span>
-      <Link href={`/board/${listing.key}`} className="btn btn-blue btn-sm shrink-0">
+      <span className="pill bg-mon/10 text-mon-dark">{formatUsd(listing.totalUsd)}</span>
+      <Link href={`/board/${listing.key}`} className="btn btn-mon btn-sm shrink-0">
         Raise
       </Link>
     </div>
@@ -164,9 +164,9 @@ export function BoardView() {
             </li>
           </ul>
           <p className="mt-3">
-            Higher on the board means a bigger payment, not a better project. Pay more than the top
-            listing to take first place. Right now everything is demo data because the contracts are
-            not deployed yet.
+            <Link href="/docs" className="font-extrabold text-mon">
+              Full docs →
+            </Link>
           </p>
         </HelpNote>
         {isDemo && <span className="pill ml-auto bg-bee/20 text-bee-dark">demo data</span>}
@@ -201,7 +201,7 @@ export function BoardView() {
       ) : sorted.length === 0 ? (
         <div className="card text-sm font-bold text-wolf">
           Nobody is on the board yet.{" "}
-          <Link href="/list" className="text-macaw">
+          <Link href="/list" className="text-mon">
             Be the first to list.
           </Link>
         </div>

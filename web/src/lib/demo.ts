@@ -1,7 +1,7 @@
 import { keccak256, toBytes } from "viem";
 
 /**
- * Seed data used only when the board is not yet deployed (no NEXT_PUBLIC_SUPABOARD), so the
+ * Seed data used only when the board is not yet deployed (no NEXT_PUBLIC_BUZZME), so the
  * deployed site renders a real, playable demo instead of an empty list. Clearly labelled as demo
  * data in the UI.
  */

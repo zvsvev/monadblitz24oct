@@ -74,15 +74,15 @@ export function ListForm() {
   if (listedKey) {
     return (
       <div className="card animate-pop text-center">
-        <p className="text-lg font-extrabold text-feather-dark">You made the board.</p>
+        <p className="text-lg font-extrabold text-mon-dark">You made the board.</p>
         <p className="mt-1 text-sm font-bold text-wolf">
           {title} is live. You can raise your rank any time.
         </p>
         <div className="mt-4 flex justify-center gap-3">
-          <Link href="/" className="btn btn-green btn-sm">
+          <Link href="/" className="btn btn-mon btn-sm">
             See the board
           </Link>
-          <Link href={`/board/${listedKey}`} className="btn btn-blue btn-sm">
+          <Link href={`/board/${listedKey}`} className="btn btn-mon btn-sm">
             Open listing
           </Link>
         </div>
@@ -93,7 +93,7 @@ export function ListForm() {
   return (
     <div className="card">
       <div className="mb-3 flex items-center gap-2">
-        <h2 className="text-lg font-extrabold text-eel">List on Supaboard</h2>
+        <h2 className="text-lg font-extrabold text-eel">List on BuzzMe</h2>
         <HelpNote title="Rules">
           A minimum of $10 equivalent starts a listing. To take first place you must beat the top
           listing by at least $5. Paying the same URL again raises your own rank by the difference.
@@ -156,13 +156,10 @@ export function ListForm() {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
-          <span className="text-xs font-bold text-hare">
-            This becomes your rank. 1 MON is treated as $1 in the demo.
-          </span>
         </label>
 
         <button
-          className="btn btn-green"
+          className="btn btn-mon"
           disabled={!canSubmit || busy}
           onClick={submit}
           type="button"
@@ -176,7 +173,7 @@ export function ListForm() {
         {address && (
           <p className="text-xs font-bold text-hare">Paying as {address}</p>
         )}
-        {status && <p className="text-xs font-bold text-macaw">{status}</p>}
+        {status && <p className="text-xs font-bold text-mon">{status}</p>}
       </div>
     </div>
   );

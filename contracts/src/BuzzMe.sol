@@ -7,7 +7,7 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-/// @title Supaboard
+/// @title BuzzMe
 /// @notice A pay-to-rank billboard. Anyone lists a URL by paying in native MON or an ERC-20
 ///         (testnet USDC). Spend becomes rank on three boards: all-time (cumulative), today, and
 ///         each archived day. Every payment is split `gachaBps` to the gacha pot, the rest to the
@@ -15,7 +15,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 /// @dev Rank is a USD-normalized score with 6 decimals (1e6 = $1). USDC-like tokens normalize by
 ///      their own decimals; MON normalizes through `monUsdRate`, an owner-set demonstration rate
 ///      (a real chain would point this at a price oracle).
-contract Supaboard is Ownable, ReentrancyGuard {
+contract BuzzMe is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     uint16 public constant BPS_DENOMINATOR = 10000;

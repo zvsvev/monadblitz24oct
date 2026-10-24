@@ -7,8 +7,8 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /// @title GachaPot
-/// @notice The Supaboard reward pot, funded by 50% of placement revenue plus any direct top-ups.
-///         A role-gated `payer` (the Supaboard backend) draws prizes. Each spin is committed to
+/// @notice The BuzzMe reward pot, funded by 50% of placement revenue plus any direct top-ups.
+///         A role-gated `payer` (the BuzzMe backend) draws prizes. Each spin is committed to
 ///         before it is revealed, so the outcome is verifiable against the pre-committed hash, and
 ///         payouts are always bounded by the pot balance for the relevant token.
 contract GachaPot is Ownable, ReentrancyGuard {

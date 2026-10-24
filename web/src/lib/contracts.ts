@@ -14,7 +14,7 @@ function addr(value: string | undefined): Address {
 
 /** Deployed contract addresses, filled in by env after the testnet deploy. */
 export const ADDRESSES = {
-  board: addr(process.env.NEXT_PUBLIC_SUPABOARD),
+  board: addr(process.env.NEXT_PUBLIC_BUZZME),
   gachaPot: addr(process.env.NEXT_PUBLIC_GACHA_POT),
   /** Monad testnet USDC (6 decimals); verified against the explorer before use. */
   usdc: "0x534b2f3A21130d7a60830c2Df862319e593943A3" as Address,

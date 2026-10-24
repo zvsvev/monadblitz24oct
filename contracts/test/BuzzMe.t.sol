@@ -2,12 +2,12 @@
 pragma solidity ^0.8.28;
 
 import {Test} from "forge-std/Test.sol";
-import {Supaboard} from "../src/Supaboard.sol";
+import {BuzzMe} from "../src/BuzzMe.sol";
 import {GachaPot} from "../src/GachaPot.sol";
 import {MockUSDC} from "./mocks/MockUSDC.sol";
 
-contract SupaboardTest is Test {
-    Supaboard board;
+contract BuzzMeTest is Test {
+    BuzzMe board;
     GachaPot pot;
     MockUSDC usdc;
 
@@ -19,7 +19,7 @@ contract SupaboardTest is Test {
 
     function setUp() public {
         pot = new GachaPot(owner, payer);
-        board = new Supaboard(owner, address(pot), treasury);
+        board = new BuzzMe(owner, address(pot), treasury);
         usdc = new MockUSDC();
 
         vm.deal(alice, 10_000 ether);
@@ -36,7 +36,7 @@ contract SupaboardTest is Test {
         vm.prank(alice);
         bytes32 key = board.list{value: 100 ether}("https://alice.xyz", "Alice");
 
-        Supaboard.Listing memory l = board.getListing(key);
+        BuzzMe.Listing memory l = board.getListing(key);
         assertEq(l.owner, alice);
         assertEq(l.totalUsd, 100e6, "100 MON at $1 = $100");
         assertEq(board.listingCount(), 1);
@@ -51,7 +51,7 @@ contract SupaboardTest is Test {
 
     function test_ListBelowMinimumReverts() public {
         vm.prank(alice);
-        vm.expectRevert(Supaboard.BelowMinimum.selector);
+        vm.expectRevert(BuzzMe.BelowMinimum.selector);
         board.list{value: 5 ether}("https://alice.xyz", "Alice");
     }
 
@@ -60,7 +60,7 @@ contract SupaboardTest is Test {
         board.list{value: 100 ether}("https://alice.xyz", "Alice");
 
         vm.prank(bob);
-        vm.expectRevert(Supaboard.AlreadyListed.selector);
+        vm.expectRevert(BuzzMe.AlreadyListed.selector);
         board.list{value: 100 ether}("https://alice.xyz", "Bob");
     }
 
@@ -73,7 +73,7 @@ contract SupaboardTest is Test {
         assertEq(board.totalUsdOf(key), 110e6);
 
         vm.prank(bob);
-        vm.expectRevert(Supaboard.NotOwner.selector);
+        vm.expectRevert(BuzzMe.NotOwner.selector);
         board.raise{value: 10 ether}(key);
     }
 
@@ -88,7 +88,7 @@ contract SupaboardTest is Test {
 
         // Crossing #1 by less than the increment is rejected.
         vm.prank(bob);
-        vm.expectRevert(Supaboard.IncrementTooSmall.selector);
+        vm.expectRevert(BuzzMe.IncrementTooSmall.selector);
         board.list{value: 102 ether}("https://bob2.xyz", "Bob2");
 
         // Clearing the increment takes the top.

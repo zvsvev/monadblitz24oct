@@ -1,38 +1,37 @@
 ---
-version: 1.0
-name: Supaboard-design-system
-description: "A playful game surface borrowed from the Duolingo app: one confident feather green (#58CC02) for the action, a friendly rounded type stack (Nunito), and chunky 16px cards with buttons that sit on a 4px darker edge and press down when tapped. Every money and rank affordance is a big green candy button; every number sits in a rounded pill. The board reads like a leaderboard in a game you can win, not a table you inspect."
+version: 1.1
+name: BuzzMe-design-system
+description: "A playful game surface borrowed from the Duolingo app and painted in Monad purple: one confident action color (#836EF9) for every button and CTA, a friendly rounded type stack (Nunito), and chunky 16px cards with buttons that sit on a 4px darker edge and press down when tapped. Gold is reserved for the streak, the #1 rank and the gacha highlight; red is only for wrong or super zonk. The board reads like a leaderboard in a game you can win, not a table you inspect."
 colors:
-  primary: "#58CC02"
-  primary-pressed: "#46A302"
-  primary-edge: "#58A700"
+  primary: "#836EF9"
+  primary-pressed: "#6D57D8"
+  primary-edge: "#5B46C4"
   on-primary: "#FFFFFF"
-  secondary: "#1CB0F6"
-  secondary-pressed: "#1899D6"
-  secondary-edge: "#1899D6"
+  primary-soft: "#EDE9FE"
+  secondary: "#C4B5FD"
+  secondary-pressed: "#A78BFA"
+  secondary-edge: "#8B6FE8"
   gold: "#FFC800"
   gold-pressed: "#E6A200"
-  gold-edge: "#E6A200"
-  purple: "#CE82FF"
-  purple-edge: "#A568CC"
+  gold-edge: "#E5A100"
   error: "#FF4B4B"
   error-pressed: "#EA2B2B"
   error-edge: "#EA2B2B"
-  success: "#58CC02"
+  success: "#836EF9"
   warning: "#FFC800"
-  ink: "#4B4B4B"
-  ink-muted: "#777777"
-  ink-subtle: "#AFAFAF"
+  ink: "#2A2342"
+  ink-muted: "#6B6480"
+  ink-subtle: "#A7A1BA"
   canvas: "#FFFFFF"
-  surface-1: "#F7F7F7"
-  surface-2: "#EFEFEF"
-  border: "#E5E5E5"
-  border-strong: "#D4D4D4"
-  inverse-canvas: "#131F24"
-  inverse-surface: "#1F2C34"
+  surface-1: "#F7F6FC"
+  surface-2: "#EFEDF7"
+  border: "#E8E5F4"
+  border-strong: "#D6D1E8"
+  inverse-canvas: "#12101D"
+  inverse-surface: "#1E1A2E"
   inverse-ink: "#FFFFFF"
-  inverse-ink-muted: "#B7C0C6"
-  overlay: "rgba(19, 31, 36, 0.6)"
+  inverse-ink-muted: "#B7B1C6"
+  overlay: "rgba(18, 16, 29, 0.6)"
 typography:
   display-xl:
     fontFamily: Nunito
@@ -138,8 +137,8 @@ components:
     rounded: "{rounded.lg}"
     padding: 14px 24px
     boxShadow: "0 0 0 {colors.primary-edge}"
-  btn-secondary:
-    backgroundColor: "{colors.secondary}"
+  btn-gacha:
+    backgroundColor: "{colors.primary}"
     textColor: "{colors.on-primary}"
     typography: "{typography.button}"
     rounded: "{rounded.lg}"
@@ -154,7 +153,7 @@ components:
     boxShadow: "0 4px 0 {colors.gold-edge}"
   btn-ghost:
     backgroundColor: "{colors.canvas}"
-    textColor: "{colors.secondary}"
+    textColor: "{colors.primary-pressed}"
     typography: "{typography.button}"
     rounded: "{rounded.lg}"
     padding: 14px 24px
@@ -188,6 +187,12 @@ components:
     padding: 14px 16px
     border: "2px solid {colors.border-strong}"
   rank-badge:
+    backgroundColor: "{colors.surface-1}"
+    textColor: "{colors.ink-muted}"
+    typography: "{typography.headline}"
+    rounded: "{rounded.md}"
+    padding: 6px 12px
+  rank-badge-top:
     backgroundColor: "{colors.gold}"
     textColor: "{colors.ink}"
     typography: "{typography.headline}"
@@ -212,18 +217,18 @@ components:
     rounded: "{rounded.lg}"
     padding: 10px 18px
   tab-selected:
-    backgroundColor: "{colors.secondary}"
+    backgroundColor: "{colors.primary}"
     textColor: "{colors.on-primary}"
     typography: "{typography.button-sm}"
     rounded: "{rounded.lg}"
     padding: 10px 18px
   gacha-card:
-    backgroundColor: "{colors.purple}"
+    backgroundColor: "{colors.primary}"
     textColor: "{colors.on-primary}"
     typography: "{typography.headline}"
     rounded: "{rounded.xl}"
     padding: 28px
-    boxShadow: "0 6px 0 {colors.purple-edge}"
+    boxShadow: "0 6px 0 {colors.primary-edge}"
   prize-reveal:
     backgroundColor: "{colors.canvas}"
     textColor: "{colors.ink}"
@@ -244,7 +249,7 @@ components:
     typography: "{typography.body}"
     rounded: "{rounded.md}"
     padding: 12px 16px
-    border: "2px solid {colors.secondary}"
+    border: "2px solid {colors.primary}"
   top-nav:
     backgroundColor: "{colors.canvas}"
     textColor: "{colors.ink}"
@@ -261,22 +266,27 @@ components:
 
 ## Overview
 
-Supaboard does not look like the market it belongs to. Every other pay-to-rank board, and the surface
-that inspired this one (outbid.lol), reads as dark, dense and clinical. Supaboard takes the opposite
-tack and borrows the entire feel of the **Duolingo app**: one confident **Feather Green**
-(`{colors.primary}` #58CC02), chunky rounded geometry, a mascot who reacts to you, streaks, and big
-candy buttons that visibly press down when tapped.
+BuzzMe does not look like the market it belongs to. Every other pay-to-rank board, and the surface
+that inspired this one (outbid.lol), reads as dark, dense and clinical. BuzzMe takes the opposite tack
+and borrows the entire feel of the **Duolingo app**, painted in **Monad purple**: one confident
+**Monad Purple** (`{colors.primary}` #836EF9), chunky rounded geometry, a mascot who reacts to you,
+streaks, and big candy buttons that visibly press down when tapped.
 
 The mechanism underneath is serious (an on-chain auction for rank, a revenue-funded gacha). The look
 is deliberately not, because a friendly frame is what makes a leaderboard something you open on
-purpose. That is the whole design argument: **soft shapes, one loud green, playful type**, wrapped
-around a hard mechanism.
+purpose. That is the whole design argument: **soft shapes, one confident purple, playful type**,
+wrapped around a hard mechanism.
+
+Monad's own brand is a single saturated purple on clean white or deep near-black, so the palette is
+built around that: purple carries every action, a light lavender carries tints and borders, gold
+carries the reward moments, and the neutrals are pulled slightly violet so nothing reads as a
+generic gray. Red is used for exactly one meaning: wrong, rejected, or super zonk.
 
 **Key characteristics:**
 
-- **One action color.** Feather Green carries every primary action (list, raise, spin). Blue
-  (`{colors.secondary}`) is the second accent for navigation and picked tabs; gold, purple and red are
-  reserved for state (streak, gacha, wrong).
+- **One action color.** Monad Purple carries every primary action (list, raise, spin) and the selected
+  tab. There is no second brand color; the light lavender (`{colors.secondary}`) is only for tints and
+  borders.
 - **Chunky, rounded, bordered.** Cards and rows use `{rounded.lg}` 16px with a 2px border, never a
   shadow. The only shadow in the system is the flat 4px edge under a button.
 - **Buttons sit on an edge and press down.** Every button carries a solid `0 4px 0 <edge>` shadow that
@@ -288,38 +298,39 @@ around a hard mechanism.
 - **Playful motion.** Wins get confetti and a bounce; a zonk gets a comedic shake; a super zonk gets a
   red flash and a "share again" prompt.
 - **Rounded mascot, present everywhere.** "Bo", a friendly rounded board-and-coin character, reacts
-  (cheers a win, shrugs a zonk). Working name; see the design doc below.
+  (cheers a win, shrugs a zonk). Working name; see the mascot note below.
 
 ---
 
 ## Colors
 
 > Source pages: `/` (the board), `/list`, `/board/[key]`, `/dashboard` (the profile, which holds the
-> gacha), `/how`.
+> gacha), `/docs`.
 
 ### Brand and action
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `{colors.primary}` | #58CC02 | Primary buttons, the ranked #1 row, active states. |
-| `{colors.primary-pressed}` | #46A302 | The pressed fill of a green button. |
-| `{colors.primary-edge}` | #58A700 | The flat 4px edge under a green button. |
-| `{colors.secondary}` | #1CB0F6 | Navigation, links, the selected board tab. |
-| `{colors.gold}` | #FFC800 | Streak flame, XP, the #1 rank badge. |
-| `{colors.purple}` | #CE82FF | The gacha card and spin surfaces. |
-| `{colors.error}` | #FF4B4B | Wrong, delisted, super-zonk flash. |
+| `{colors.primary}` | #836EF9 | Primary buttons, the selected tab, active states. |
+| `{colors.primary-pressed}` | #6D57D8 | The pressed fill of a purple button. |
+| `{colors.primary-edge}` | #5B46C4 | The flat 4px edge under a purple button. |
+| `{colors.primary-soft}` | #EDE9FE | A very light purple tint for quiet surfaces. |
+| `{colors.secondary}` | #C4B5FD | Light lavender: tints, borders, secondary accents. |
+| `{colors.gold}` | #FFC800 | Streak flame, XP, the #1 rank badge, the gacha highlight. |
+| `{colors.error}` | #FF4B4B | Wrong, rejected, or super zonk. |
 
 ### Neutrals and surfaces
 
-- `{colors.canvas}` #FFFFFF is the page. `{colors.surface-1}` #F7F7F7 is the inset surface (inputs,
-  HUD pills). `{colors.border}` #E5E5E5 is every 2px card and row outline.
-- `{colors.ink}` #4B4B4B is the primary text, never pure black. `{colors.ink-muted}` #777777 is
-  secondary text, `{colors.ink-subtle}` #AFAFAF is disabled and placeholder.
-- `{colors.inverse-canvas}` #131F24 is the footer, the only dark surface above the page break.
+- `{colors.canvas}` #FFFFFF is the page. `{colors.surface-1}` #F7F6FC is the inset surface (inputs,
+  HUD pills). `{colors.border}` #E8E5F4 is every 2px card and row outline.
+- `{colors.ink}` #2A2342 is the primary text, a deep violet near-black, never pure black.
+  `{colors.ink-muted}` #6B6480 is secondary text, `{colors.ink-subtle}` #A7A1BA is disabled and
+  placeholder.
+- `{colors.inverse-canvas}` #12101D is the footer, the only dark surface above the page break.
 
 ### Semantics
 
-- `{colors.success}` green for correct or confirmed. `{colors.warning}` gold for pending or at-risk.
+- `{colors.success}` purple for confirmed. `{colors.warning}` gold for pending or at-risk.
   `{colors.error}` red for wrong, rejected, or super zonk. Feedback is rendered next to the control
   that caused it, never in a single block at the foot of the page.
 
@@ -343,32 +354,32 @@ One rule: **no thin weights anywhere.** If it looks like a document, it is wrong
 
 ## Layout
 
-- **Board first.** On `/`, the ranked list is the hero. Interactive surfaces sit near the top; contract
-  addresses, rules and prose go below a heavy rule, never above the fold.
+- **Board first.** On `/`, the ranked list is the hero. Interactive surfaces sit near the top; rules
+  and prose live in `/docs`, never above the fold.
 - **One column on mobile, a centred column on desktop.** The board is a list, not a grid, so it stays
   legible at every width. Max content width 720px for the board, 960px for two-up detail pages.
 - **Rows, not tables.** Each listing is a `list-row`: rank badge, thumbnail, title, spend pill, and a
   Raise button. Rows are separated by 8px of space, not dividers.
-- **HUD at the top.** A sticky row of pills (pot, your streak, your level) sits under the nav, so the
-  game state is always visible. The HUD lives inside the screen it belongs to, not floating around it.
+- **Notes hide behind a "?".** The board's key facts (the pot, the daily share, "rank = what you pay")
+  live in a help note whose panel opens inside the board screen, not as paragraphs on the page.
 - **Spacing scale** `{spacing}` 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64. Section rhythm uses 64px.
 
 ---
 
 ## Components
 
-- **btn-primary** (green, 4px edge): the one loud action per screen (List, Raise, Spin).
-- **btn-secondary** (blue): secondary navigation actions.
-- **btn-gold**: streak or XP moments.
+- **btn-primary** (purple, 4px edge): the one loud action per screen (List, Raise, Spin).
+- **btn-gacha** (purple gradient, deeper edge): the gacha call to action.
+- **btn-gold**: streak or reward moments.
 - **btn-ghost**: tertiary, quiet actions.
 - **card**: white, 16px radius, 2px border, 20px padding. No shadow.
 - **list-row**: the billboard unit described above.
 - **rank-badge**: gold for #1, surface pill for all others.
 - **hud-pill / streak-pill**: the game stats.
-- **tab / tab-selected**: the All-time / Today / Daily switch, blue when selected.
-- **gacha-card**: the purple, rounded spin surface with its own edge.
-- **prize-reveal**: the big centered result card, green border on a win, red on a zonk.
-- **input**: inset gray, 2px border, blue border when focused.
+- **tab / tab-selected**: the All-time / Today / Daily switch, purple when selected.
+- **gacha-card**: the purple gradient spin surface with its own edge.
+- **prize-reveal**: the big centered result card, purple border on a win, red on a zonk.
+- **input**: inset lavender-gray, 2px border, purple border when focused.
 
 ---
 
@@ -396,29 +407,30 @@ lecture.
 - Do not: "Transaction reverted: insufficient allowance."
 - Do not: "Rank is determined by cumulative USD-normalized spend."
 
-Jargon stays in the explanation zone (behind the "?" affordance), not in the moment. Plain words in
-the moment, precise words in `/how`.
+Jargon stays in the explanation zone (the `/docs` page and the "?" note), not in the moment. Plain
+words in the moment, precise words in `/docs`.
 
 ---
 
 ## Do and do not
 
-- **Do** keep exactly one loud green action per screen.
+- **Do** keep exactly one loud purple action per screen.
 - **Do** put every number in a rounded pill.
 - **Do** render feedback next to the control that caused it.
-- **Do** hide instruction and rules behind a "?" affordance, not as paragraphs on the board.
+- **Do** hide instruction and rules behind a "?" affordance or in `/docs`, not as paragraphs on the
+  board.
 - **Do not** add drop shadows to cards (only buttons carry an edge).
 - **Do not** use em dashes in copy (prefer commas and colons).
-- **Do not** use thin type, hard corners, or a second green.
+- **Do not** use thin type, hard corners, or a second brand color.
 - **Do not** use red for anything other than wrong, rejected, or super zonk.
 
 ---
 
 ## The mascot
 
-**"Bo"** is a friendly, rounded character made of a stack of little billboard tiles topped by a coin,
-with the board's green on its face. Bo appears small in the nav, cheers on a gacha win (arms up and a
-confetti trail), shrugs on a zonk, and looks worried on a super zonk before holding out the share
-button. Bo is the board's Duo.
+**"Bo"** is a friendly, rounded character made of a stack of little billboard tiles in Monad purple,
+topped by a gold coin, with big white eyes. Bo appears small in the nav, cheers on a gacha win (arms
+up and a confetti trail), shrugs on a zonk, and looks worried on a super zonk before holding out the
+share button. Bo is the board's Duo.
 
 This is a working name and a placeholder direction. Real art and a final name are an open decision.

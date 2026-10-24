@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { usePrivy } from "@privy-io/react-auth";
 import { useAccount, useConnect, useDisconnect, useConnectors } from "wagmi";
 import { cn } from "@/lib/cn";
 import { shortAddress } from "@/lib/format";
 import { Mascot } from "@/components/mascot";
+
+const PRIVY_ENABLED = !!process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
 const LINKS = [
   { href: "/", label: "Board" },
@@ -14,7 +17,37 @@ const LINKS = [
   { href: "/dashboard", label: "Profile" },
 ];
 
-function WalletButton() {
+/** Privy-backed connect button: email / passkey / social login plus external wallets. */
+function PrivyWalletButton() {
+  const { ready, authenticated, login, logout, user } = usePrivy();
+  const { address } = useAccount();
+
+  if (!ready) {
+    return (
+      <button className="btn btn-ghost btn-sm" disabled>
+        …
+      </button>
+    );
+  }
+
+  if (authenticated) {
+    const label = address ? shortAddress(address) : (user?.email?.address ?? "Account");
+    return (
+      <button className="btn btn-ghost btn-sm" onClick={() => logout()}>
+        {label}
+      </button>
+    );
+  }
+
+  return (
+    <button className="btn btn-mon btn-sm" onClick={() => login()}>
+      Connect
+    </button>
+  );
+}
+
+/** Fallback when no Privy app id is set: connect an injected browser wallet. */
+function InjectedWalletButton() {
   const { address, isConnected } = useAccount();
   const connectors = useConnectors();
   const { connect } = useConnect();
@@ -32,8 +65,10 @@ function WalletButton() {
   return (
     <div className="relative">
       <button
-        className="btn btn-green btn-sm"
-        onClick={() => (connectors.length > 1 ? setOpen((v) => !v) : connect({ connector: connectors[0] }))}
+        className="btn btn-mon btn-sm"
+        onClick={() =>
+          connectors.length > 1 ? setOpen((v) => !v) : connect({ connector: connectors[0] })
+        }
         disabled={connectors.length === 0}
       >
         {connectors.length === 0 ? "No wallet" : "Connect"}
@@ -58,6 +93,10 @@ function WalletButton() {
   );
 }
 
+function WalletButton() {
+  return PRIVY_ENABLED ? <PrivyWalletButton /> : <InjectedWalletButton />;
+}
+
 export function Nav() {
   const pathname = usePathname();
 
@@ -66,7 +105,7 @@ export function Nav() {
       <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-3 px-4 py-3">
         <Link href="/" className="flex items-center gap-2">
           <Mascot className="h-8 w-8" />
-          <span className="text-lg font-extrabold tracking-tight text-feather-dark">supaboard</span>
+          <span className="text-lg font-extrabold tracking-tight text-mon-dark">buzzme</span>
         </Link>
 
         <nav className="hidden items-center gap-1 sm:flex">
@@ -78,7 +117,7 @@ export function Nav() {
                 href={link.href}
                 className={cn(
                   "rounded-xl px-3 py-1.5 text-xs font-extrabold uppercase tracking-wider",
-                  active ? "bg-macaw/10 text-macaw" : "text-wolf hover:text-eel",
+                  active ? "bg-mon/10 text-mon-dark" : "text-wolf hover:text-eel",
                 )}
               >
                 {link.label}
@@ -99,7 +138,7 @@ export function Nav() {
               href={link.href}
               className={cn(
                 "rounded-xl px-3 py-1.5 text-xs font-extrabold uppercase tracking-wider",
-                active ? "bg-macaw/10 text-macaw" : "text-wolf",
+                active ? "bg-mon/10 text-mon-dark" : "text-wolf",
               )}
             >
               {link.label}

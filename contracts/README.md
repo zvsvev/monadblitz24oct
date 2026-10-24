@@ -1,8 +1,8 @@
-# Supaboard contracts
+# BuzzMe contracts
 
 Two contracts, built with [Foundry](https://book.getfoundry.sh/):
 
-- **`Supaboard.sol`** — the pay-to-rank billboard. Accepts native MON and ERC-20 (testnet USDC),
+- **`BuzzMe.sol`** — the pay-to-rank billboard. Accepts native MON and ERC-20 (testnet USDC),
   records a USD-normalized rank per listing (cumulative plus a per-UTC-day bucket), enforces the
   minimum spend and the #1 minimum-increment rule, and splits every payment 50% to the gacha pot,
   50% to treasury.

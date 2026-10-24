@@ -12,14 +12,14 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Supaboard: pay-to-rank billboard on Monad",
+  title: "BuzzMe: pay-to-rank billboard on Monad",
   description:
     "Pay in MON or USDC to rank your project on a public board, or share the board to spin a daily chest. On Monad testnet.",
 };
 
 const FOOTER_LINKS = [
+  { href: "/docs", label: "Docs" },
   { href: "/list", label: "List" },
-  { href: "/how", label: "How it works" },
   { href: "/dashboard", label: "Profile" },
 ];
 
@@ -36,16 +36,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-xs font-extrabold uppercase tracking-wider text-wolf hover:text-macaw"
+                  className="text-xs font-extrabold uppercase tracking-wider text-wolf hover:text-mon"
                 >
                   {link.label}
                 </Link>
               ))}
             </div>
             <p className="text-xs font-bold text-hare">
-              Supaboard runs on Monad testnet, so the tokens are worth nothing. Higher on the board
-              means someone paid more, not that a project is better. The chest is a reward for
-              sharing, not a paid lottery.
+              Monad testnet. Tokens are worthless. Rank is what you pay, not quality.
             </p>
           </footer>
         </Providers>
