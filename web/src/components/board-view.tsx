@@ -24,24 +24,18 @@ export type BoardListing = {
 
 type Tab = "all" | "today" | "daily";
 
+/** Demo rows, flagged so the board labels them as demo data. */
+function demoRows(): BoardListing[] {
+  return DEMO_LISTINGS.map((d) => ({ ...d, demo: true }));
+}
+
 export function useBoardData() {
   const client = usePublicClient();
 
   const query = useQuery({
     queryKey: ["board", isDeployed ? "live" : "demo", client?.chain?.id ?? 0],
     queryFn: async (): Promise<BoardListing[]> => {
-      if (!isDeployed || !client) {
-        return DEMO_LISTINGS.map((d) => ({
-          key: d.key,
-          title: d.title,
-          url: d.url,
-          owner: d.owner,
-          totalUsd: d.totalUsd,
-          todayUsd: d.todayUsd,
-          createdAt: d.createdAt,
-          demo: true,
-        }));
-      }
+      if (!isDeployed || !client) return demoRows();
 
       const count = (await client.readContract({
         address: ADDRESSES.board,
@@ -49,7 +43,8 @@ export function useBoardData() {
         functionName: "listingCount",
       })) as bigint;
       const n = Number(count);
-      if (n === 0) return [];
+      // The contracts are live but nobody has listed yet, so show the labelled demo board.
+      if (n === 0) return demoRows();
 
       const day = (await client.readContract({
         address: ADDRESSES.board,
