@@ -37,21 +37,10 @@ export const boardAbi = [
   {
     type: "function",
     name: "list",
-    stateMutability: "payable",
-    inputs: [
-      { name: "url", type: "string" },
-      { name: "title", type: "string" },
-    ],
-    outputs: [{ name: "", type: "bytes32" }],
-  },
-  {
-    type: "function",
-    name: "listERC20",
     stateMutability: "nonpayable",
     inputs: [
       { name: "url", type: "string" },
       { name: "title", type: "string" },
-      { name: "token", type: "address" },
       { name: "amount", type: "uint256" },
     ],
     outputs: [{ name: "", type: "bytes32" }],
@@ -59,17 +48,9 @@ export const boardAbi = [
   {
     type: "function",
     name: "raise",
-    stateMutability: "payable",
-    inputs: [{ name: "key", type: "bytes32" }],
-    outputs: [],
-  },
-  {
-    type: "function",
-    name: "raiseERC20",
     stateMutability: "nonpayable",
     inputs: [
       { name: "key", type: "bytes32" },
-      { name: "token", type: "address" },
       { name: "amount", type: "uint256" },
     ],
     outputs: [],
@@ -163,10 +144,10 @@ export const boardAbi = [
   },
   {
     type: "function",
-    name: "monUsdRate",
+    name: "usdc",
     stateMutability: "view",
     inputs: [],
-    outputs: [{ name: "", type: "uint256" }],
+    outputs: [{ name: "", type: "address" }],
   },
   {
     type: "event",
@@ -200,6 +181,13 @@ export const potAbi = [
     name: "potBalance",
     stateMutability: "view",
     inputs: [{ name: "token", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "tierAmount",
+    stateMutability: "pure",
+    inputs: [{ name: "tier", type: "uint8" }],
     outputs: [{ name: "", type: "uint256" }],
   },
   {

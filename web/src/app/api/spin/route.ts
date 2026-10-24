@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { hasDebt, hasStore, listSpins, logSpin, setDebt, shareCount, utcDay } from "@/lib/db";
-import { drawDemoSpin } from "@/lib/demo";
+import { drawOutcome } from "@/lib/gacha";
 import { onChainConfigured, runOnChainSpin } from "@/lib/pot";
 
 export async function POST(req: Request) {
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
   }
 
   // The draw is fixed here, then committed and revealed on-chain when the payer is configured.
-  const outcome = drawDemoSpin(Date.now());
+  const outcome = drawOutcome(Date.now());
 
   let txHashes: string[] | null = null;
   if (onChainConfigured()) {

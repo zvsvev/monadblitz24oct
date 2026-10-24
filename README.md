@@ -10,12 +10,13 @@ break it, have fun with it.
 
 ## What you can do with it
 
-- **Put your project, ad, or link on the board.** Pay with MON or USDC and you appear on the
-  leaderboard. The more you pay, the higher you stand.
+- **Put your project, ad, or link on the board.** Pay with USDC and you appear on the leaderboard.
+  The more you pay, the higher you stand. MON is only used for gas.
 - **Knock someone off the top.** Want the number one spot? Pay more than the person on top. The board
   updates in about a second.
-- **Play the daily gacha.** Share BuzzMe with a friend once a day and you unlock one spin. You can
-  win MON or USDC, or get a "zonk" (nothing), or a "super zonk" (share again to keep playing).
+- **Play the daily gacha.** Share BuzzMe with a friend once a day and you unlock one spin. You can win
+  USDC (100, 50, 10, 1, 0.05 or 0.01), get a "zonk" (nothing), or a "super zonk" (share again to keep
+  playing). Every prize and its odds are published on the Profile page.
 - **Build a streak.** Share every day to keep your flame alive.
 
 That is the whole idea: pay to climb the board, or share to try gacha. You do not need money to take
@@ -27,7 +28,7 @@ part.
 
 1. Open the site and **connect a wallet**. If you do not have one, BuzzMe can make you one with just
    an email or a passkey, no extension needed.
-2. To list something: click **List**, paste a link, add a title, choose MON or USDC, and confirm.
+2. To list something: click **List**, paste a link, add a title, enter a USDC amount, and confirm.
    Your listing appears on the board with a rank.
 3. To move up: open your listing and click **Raise**. You only pay the difference between your old
    amount and your new one.
@@ -41,8 +42,8 @@ New here? Read the **Docs** in the app for the ground rules.
 
 ## What BuzzMe is not
 
-- **Not real money.** Everything runs on the Monad testnet. The MON and the USDC here are test tokens
-  with no value. Nothing here is an investment.
+- **Not real money.** Everything runs on the Monad testnet. The USDC here is a test token with no
+  value. Nothing here is an investment.
 - **Not a ranking of quality.** Being higher means someone paid more, not that a project is better.
 - **Not a promise of winnings.** The gacha is a reward for sharing, not a game of chance you buy
   into. Most spins are a zonk. The prize pool is funded by the money the board earns, and it can never
@@ -74,13 +75,14 @@ Silakan dicoba, dirusak, dan dinikmati.
 
 ## Yang bisa kamu lakukan
 
-- **Pasang proyek, iklan, atau tautanmu di papan.** Bayar dengan MON atau USDC dan namamu muncul di
-  papan peringkat. Semakin besar yang kamu bayar, semakin tinggi posisimu.
+- **Pasang proyek, iklan, atau tautanmu di papan.** Bayar dengan USDC dan namamu muncul di papan
+  peringkat. Semakin besar yang kamu bayar, semakin tinggi posisimu. MON hanya untuk gas.
 - **Geser orang dari posisi pertama.** Mau jadi nomor satu? Bayar lebih besar daripada yang di atas.
   Papan berubah dalam sekitar satu detik.
 - **Mainkan gacha harian.** Bagikan BuzzMe ke teman sekali sehari dan kamu dapat satu kesempatan
-  memutar. Kamu bisa menang MON atau USDC, atau dapat "zonk" (tidak dapat apa-apa), atau "super zonk"
-  (bagikan lagi supaya bisa lanjut main).
+  memutar. Kamu bisa menang USDC (100, 50, 10, 1, 0.05, atau 0.01), dapat "zonk" (tidak dapat
+  apa-apa), atau "super zonk" (bagikan lagi supaya bisa lanjut main). Semua hadiah dan peluangnya
+  tertera di halaman Profile.
 - **Jaga runtutan (streak).** Bagikan setiap hari agar api streak-mu tetap menyala.
 
 Itu inti idenya: bayar untuk naik papan, atau bagikan untuk coba gacha. Kamu tidak perlu uang untuk ikut.
@@ -91,8 +93,8 @@ Itu inti idenya: bayar untuk naik papan, atau bagikan untuk coba gacha. Kamu tid
 
 1. Buka situsnya dan **sambungkan dompet (wallet)**. Kalau belum punya, BuzzMe bisa membuatkan
    untukmu cukup dengan email atau passkey, tanpa perlu ekstensi.
-2. Mau memasang sesuatu: klik **List**, tempel tautan, isi judul, pilih MON atau USDC, lalu konfirmasi.
-   Pasanganmu akan muncul di papan dengan peringkat.
+2. Mau memasang sesuatu: klik **List**, tempel tautan, isi judul, masukkan jumlah USDC, lalu
+   konfirmasi. Pasanganmu akan muncul di papan dengan peringkat.
 3. Mau naik peringkat: buka pasanganmu dan klik **Raise**. Kamu hanya membayar selisih antara jumlah
    lama dan jumlah baru.
 4. Mau coba gacha: buka **Profile**, tekan **Share**, lalu **Spin**. Satu bagi, satu putaran, setiap hari.
@@ -105,8 +107,8 @@ Baru di sini? Buka **Docs** di dalam aplikasi untuk aturan dasarnya.
 
 ## Yang BuzzMe bukan
 
-- **Bukan uang sungguhan.** Semuanya berjalan di Monad testnet. MON dan USDC di sini adalah token uji
-  tanpa nilai. Tidak ada investasi di sini.
+- **Bukan uang sungguhan.** Semuanya berjalan di Monad testnet. USDC di sini adalah token uji tanpa
+  nilai. Tidak ada investasi di sini.
 - **Bukan penilaian kualitas.** Berada lebih tinggi berarti seseorang membayar lebih besar, bukan
   berarti proyeknya lebih bagus.
 - **Bukan janji menang.** Gacha ini hadiah karena membagikan, bukan permainan untung-untungan yang kamu

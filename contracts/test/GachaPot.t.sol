@@ -17,11 +17,6 @@ contract GachaPotTest is Test {
     function setUp() public {
         pot = new GachaPot(owner, payer);
         usdc = new MockUSDC();
-        vm.deal(owner, 1_000 ether);
-
-        vm.prank(owner);
-        (bool ok,) = address(pot).call{value: 50 ether}("");
-        require(ok, "fund failed");
         usdc.mint(address(pot), 100e6);
     }
 
@@ -34,34 +29,27 @@ contract GachaPotTest is Test {
     }
 
     function test_Funded() public {
-        assertEq(pot.potBalance(address(0)), 50 ether);
         assertEq(pot.potBalance(address(usdc)), 100e6);
     }
 
-    function test_CommitRevealPaysNative() public {
-        uint8 tier = pot.TIER_MON();
-        uint256 amount = 1 ether;
-        bytes32 nonce = keccak256("nonce");
-        bytes32 c = _commitment(alice, tier, amount, nonce);
-
-        vm.prank(payer);
-        pot.commitSpin(alice, c);
-
-        vm.prank(payer);
-        pot.revealSpin(alice, tier, amount, nonce, address(0));
-
-        assertEq(alice.balance, amount);
-        assertEq(pot.potBalance(address(0)), 50 ether - amount);
+    function test_TierLadder() public {
+        assertEq(pot.tierAmount(pot.TIER_ZONK()), 0);
+        assertEq(pot.tierAmount(pot.TIER_USDC_0_01()), 10_000, "0.01 USDC");
+        assertEq(pot.tierAmount(pot.TIER_USDC_0_05()), 50_000, "0.05 USDC");
+        assertEq(pot.tierAmount(pot.TIER_USDC_1()), 1_000_000, "1 USDC");
+        assertEq(pot.tierAmount(pot.TIER_USDC_10()), 10_000_000, "10 USDC");
+        assertEq(pot.tierAmount(pot.TIER_USDC_50()), 50_000_000, "50 USDC");
+        assertEq(pot.tierAmount(pot.TIER_USDC_100()), 100_000_000, "100 USDC");
+        assertEq(pot.tierAmount(99), 0, "unknown tier pays nothing");
     }
 
     function test_CommitRevealPaysUsdc() public {
-        uint8 tier = pot.TIER_USDC();
-        uint256 amount = 5e6;
-        bytes32 nonce = keccak256("nonce2");
-        bytes32 c = _commitment(alice, tier, amount, nonce);
+        uint8 tier = pot.TIER_USDC_10();
+        uint256 amount = pot.tierAmount(tier);
+        bytes32 nonce = keccak256("nonce");
 
         vm.prank(payer);
-        pot.commitSpin(alice, c);
+        pot.commitSpin(alice, _commitment(alice, tier, amount, nonce));
 
         vm.prank(payer);
         pot.revealSpin(alice, tier, amount, nonce, address(usdc));
@@ -71,14 +59,14 @@ contract GachaPotTest is Test {
     }
 
     function test_MismatchReverts() public {
-        uint8 tier = pot.TIER_MON();
+        uint8 tier = pot.TIER_USDC_1();
         bytes32 nonce = keccak256("nonce");
         vm.prank(payer);
-        pot.commitSpin(alice, _commitment(alice, tier, 1 ether, nonce));
+        pot.commitSpin(alice, _commitment(alice, tier, 1e6, nonce));
 
         vm.prank(payer);
         vm.expectRevert(GachaPot.CommitmentMismatch.selector);
-        pot.revealSpin(alice, tier, 2 ether, nonce, address(0));
+        pot.revealSpin(alice, tier, 2e6, nonce, address(usdc));
     }
 
     function test_ZonkPaysNothing() public {
@@ -87,22 +75,22 @@ contract GachaPotTest is Test {
         vm.prank(payer);
         pot.commitSpin(alice, _commitment(alice, tier, 0, nonce));
 
-        uint256 before = pot.potBalance(address(0));
+        uint256 before = pot.potBalance(address(usdc));
         vm.prank(payer);
-        pot.revealSpin(alice, tier, 0, nonce, address(0));
-        assertEq(pot.potBalance(address(0)), before);
+        pot.revealSpin(alice, tier, 0, nonce, address(usdc));
+        assertEq(pot.potBalance(address(usdc)), before);
     }
 
     function test_InsolventReverts() public {
-        uint8 tier = pot.TIER_BIG_MON();
-        uint256 amount = 1_000 ether; // more than the pot holds
+        uint8 tier = pot.TIER_USDC_100();
+        uint256 amount = 1_000e6; // more than the pot holds
         bytes32 nonce = keccak256("nonce");
         vm.prank(payer);
         pot.commitSpin(alice, _commitment(alice, tier, amount, nonce));
 
         vm.prank(payer);
         vm.expectRevert(GachaPot.Insolvent.selector);
-        pot.revealSpin(alice, tier, amount, nonce, address(0));
+        pot.revealSpin(alice, tier, amount, nonce, address(usdc));
     }
 
     function test_OnlyPayerCanCommit() public {
@@ -112,9 +100,9 @@ contract GachaPotTest is Test {
     }
 
     function test_NoCommitmentReverts() public {
-        uint8 tier = pot.TIER_MON();
+        uint8 tier = pot.TIER_USDC_1();
         vm.prank(payer);
         vm.expectRevert(GachaPot.NoCommitment.selector);
-        pot.revealSpin(alice, tier, 1 ether, keccak256("x"), address(0));
+        pot.revealSpin(alice, tier, 1e6, keccak256("x"), address(usdc));
     }
 }

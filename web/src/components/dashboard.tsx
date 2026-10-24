@@ -83,9 +83,9 @@ export function Dashboard() {
         {spins.length === 0 ? (
           <div className="card text-sm font-bold text-wolf">
             No spins yet.{" "}
-            <Link href="/gacha" className="text-mon">
-              Share and spin the chest.
-            </Link>
+            <a href="#gacha" className="text-mon">
+              Try the daily gacha below.
+            </a>
           </div>
         ) : (
           <ul className="flex flex-col gap-2">

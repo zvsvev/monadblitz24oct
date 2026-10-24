@@ -8,13 +8,14 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /// @title BuzzMe
-/// @notice A pay-to-rank billboard. Anyone lists a URL by paying in native MON or an ERC-20
-///         (testnet USDC). Spend becomes rank on three boards: all-time (cumulative), today, and
-///         each archived day. Every payment is split `gachaBps` to the gacha pot, the rest to the
+/// @notice A pay-to-rank billboard paid in **USDC only**. MON is never accepted as payment; it is
+///         only used for gas. The settlement token is fixed by `usdc`, so any other ERC-20 is
+///         rejected. Spend becomes rank on three boards: all-time (cumulative), today, and each
+///         archived day. Every payment is split `gachaBps` to the gacha pot, the rest to the
 ///         treasury. The first payer of a URL owns that listing.
-/// @dev Rank is a USD-normalized score with 6 decimals (1e6 = $1). USDC-like tokens normalize by
-///      their own decimals; MON normalizes through `monUsdRate`, an owner-set demonstration rate
-///      (a real chain would point this at a price oracle).
+/// @dev Rank is a USD-normalized score with 6 decimals (1e6 = $1). Because the settlement token is
+///      USDC (6 decimals) the score is the token amount as-is; the scaling stays explicit so the
+///      contract still works if the token is swapped for one with different decimals.
 contract BuzzMe is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
@@ -41,14 +42,14 @@ contract BuzzMe is Ownable, ReentrancyGuard {
     bytes32 public topKey;
     uint256 public topUsd;
 
+    /// @notice The only accepted payment token (Monad testnet USDC, 6 decimals).
+    address public usdc;
     address public gachaPot;
     address public treasury;
 
     uint16 public gachaBps = 5000;
     uint256 public minSpendUsd = 10 * USD_DECIMALS;
     uint256 public minIncrementUsd = 5 * USD_DECIMALS;
-    /// @notice USD per 1 MON, 6 decimals (1e6 = $1 per MON). Demonstration rate.
-    uint256 public monUsdRate = 1e6;
 
     event Listed(
         bytes32 indexed key,
@@ -64,71 +65,57 @@ contract BuzzMe is Ownable, ReentrancyGuard {
     );
     event Split(bytes32 indexed key, address token, uint256 toGacha, uint256 toTreasury);
     event ConfigChanged(
-        address gachaPot,
-        address treasury,
-        uint16 gachaBps,
-        uint256 minSpendUsd,
-        uint256 minIncrementUsd,
-        uint256 monUsdRate
+        address usdc, address gachaPot, address treasury, uint16 gachaBps, uint256 minSpendUsd, uint256 minIncrementUsd
     );
 
     error ZeroAddress();
-    error NoValue();
+    error ZeroAmount();
     error AlreadyListed();
     error NotListed();
     error NotOwner();
     error BelowMinimum();
     error IncrementTooSmall();
 
-    constructor(address owner_, address gachaPot_, address treasury_) Ownable(owner_) {
-        if (gachaPot_ == address(0) || treasury_ == address(0)) revert ZeroAddress();
+    constructor(address owner_, address gachaPot_, address treasury_, address usdc_)
+        Ownable(owner_)
+    {
+        if (gachaPot_ == address(0) || treasury_ == address(0) || usdc_ == address(0)) {
+            revert ZeroAddress();
+        }
         gachaPot = gachaPot_;
         treasury = treasury_;
+        usdc = usdc_;
     }
 
     // ---------------------------------------------------------------------
     // Listing
     // ---------------------------------------------------------------------
 
-    /// @notice List a URL with a native MON payment. The funded amount is msg.value.
-    function list(string calldata url, string calldata title) external payable returns (bytes32) {
-        if (msg.value == 0) revert NoValue();
-        return _list(url, title, address(0), msg.value);
-    }
-
-    /// @notice List a URL with an ERC-20 payment. Approve this contract for `amount` first.
-    function listERC20(string calldata url, string calldata title, address token, uint256 amount)
+    /// @notice List a URL by paying `amount` USDC. Approve this contract for `amount` first.
+    function list(string calldata url, string calldata title, uint256 amount)
         external
         returns (bytes32)
     {
-        if (token == address(0)) revert ZeroAddress();
-        if (amount == 0) revert NoValue();
-        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
-        return _list(url, title, token, amount);
+        if (amount == 0) revert ZeroAmount();
+        IERC20(usdc).safeTransferFrom(msg.sender, address(this), amount);
+        return _list(url, title, amount);
     }
 
-    /// @notice Raise your own listing with a native MON payment.
-    function raise(bytes32 key) external payable {
-        if (msg.value == 0) revert NoValue();
-        _spend(key, address(0), msg.value);
+    /// @notice Raise your own listing by paying `amount` USDC. Approve this contract first.
+    function raise(bytes32 key, uint256 amount) external {
+        if (amount == 0) revert ZeroAmount();
+        IERC20(usdc).safeTransferFrom(msg.sender, address(this), amount);
+        _spend(key, amount);
     }
 
-    /// @notice Raise your own listing with an ERC-20 payment. Approve this contract first.
-    function raiseERC20(bytes32 key, address token, uint256 amount) external {
-        if (token == address(0)) revert ZeroAddress();
-        if (amount == 0) revert NoValue();
-        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
-        _spend(key, token, amount);
-    }
-
-    function _list(string calldata url, string calldata title, address token, uint256 amount)
+    function _list(string calldata url, string calldata title, uint256 amount)
         private
         returns (bytes32 key)
     {
         key = keccak256(bytes(url));
         if (_exists[key]) revert AlreadyListed();
 
-        uint256 usd = _toUsd(token, amount);
+        uint256 usd = _toUsd(amount);
         if (usd < minSpendUsd) revert BelowMinimum();
 
         _exists[key] = true;
@@ -143,25 +130,25 @@ contract BuzzMe is Ownable, ReentrancyGuard {
 
         _applyRank(key, usd);
         _accountDay(key, usd);
-        _split(key, token, amount);
+        _split(key, amount);
 
-        emit Listed(key, msg.sender, token, amount, usd, url, title);
-        emit Raised(key, msg.sender, token, amount, usd);
+        emit Listed(key, msg.sender, usdc, amount, usd, url, title);
+        emit Raised(key, msg.sender, usdc, amount, usd);
     }
 
-    function _spend(bytes32 key, address token, uint256 amount) private {
+    function _spend(bytes32 key, uint256 amount) private {
         Listing storage listing = _listings[key];
         if (listing.owner == address(0)) revert NotListed();
         if (msg.sender != listing.owner) revert NotOwner();
 
-        uint256 usd = _toUsd(token, amount);
+        uint256 usd = _toUsd(amount);
         listing.totalUsd += usd;
 
         _applyRank(key, listing.totalUsd);
         _accountDay(key, usd);
-        _split(key, token, amount);
+        _split(key, amount);
 
-        emit Raised(key, msg.sender, token, amount, usd);
+        emit Raised(key, msg.sender, usdc, amount, usd);
     }
 
     /// @notice Enforce the #1 minimum-increment rule and update the top-of-board pointer.
@@ -181,12 +168,12 @@ contract BuzzMe is Ownable, ReentrancyGuard {
         dayUsd[key][uint64(block.timestamp / 1 days)] += usd;
     }
 
-    function _split(bytes32 key, address token, uint256 amount) private {
+    function _split(bytes32 key, uint256 amount) private {
         uint256 toGacha = (amount * gachaBps) / BPS_DENOMINATOR;
         uint256 toTreasury = amount - toGacha;
-        _pay(token, gachaPot, toGacha);
-        _pay(token, treasury, toTreasury);
-        emit Split(key, token, toGacha, toTreasury);
+        if (toGacha > 0) IERC20(usdc).safeTransfer(gachaPot, toGacha);
+        if (toTreasury > 0) IERC20(usdc).safeTransfer(treasury, toTreasury);
+        emit Split(key, usdc, toGacha, toTreasury);
     }
 
     // ---------------------------------------------------------------------
@@ -229,6 +216,12 @@ contract BuzzMe is Ownable, ReentrancyGuard {
     // Admin
     // ---------------------------------------------------------------------
 
+    function setUsdc(address usdc_) external onlyOwner {
+        if (usdc_ == address(0)) revert ZeroAddress();
+        usdc = usdc_;
+        _emitConfig();
+    }
+
     function setGachaPot(address gachaPot_) external onlyOwner {
         if (gachaPot_ == address(0)) revert ZeroAddress();
         gachaPot = gachaPot_;
@@ -253,39 +246,17 @@ contract BuzzMe is Ownable, ReentrancyGuard {
         _emitConfig();
     }
 
-    /// @notice Set the demonstration MON/USD rate: USD per 1 MON with 6 decimals.
-    function setMonUsdRate(uint256 monUsdRate_) external onlyOwner {
-        require(monUsdRate_ > 0, "rate zero");
-        monUsdRate = monUsdRate_;
-        _emitConfig();
-    }
-
     function _emitConfig() private {
-        emit ConfigChanged(
-            gachaPot, treasury, gachaBps, minSpendUsd, minIncrementUsd, monUsdRate
-        );
+        emit ConfigChanged(usdc, gachaPot, treasury, gachaBps, minSpendUsd, minIncrementUsd);
     }
 
     // ---------------------------------------------------------------------
     // Internal helpers
     // ---------------------------------------------------------------------
 
-    function _toUsd(address token, uint256 amount) private view returns (uint256) {
-        if (token == address(0)) {
-            // amount is 18-decimal wei; monUsdRate is USD(6dp) per 1 MON.
-            return (amount * monUsdRate) / 1e18;
-        }
-        uint8 decimals = IERC20Metadata(token).decimals();
+    /// @notice Normalize a settlement-token amount to the 6-decimal USD score.
+    function _toUsd(uint256 amount) private view returns (uint256) {
+        uint8 decimals = IERC20Metadata(usdc).decimals();
         return (amount * USD_DECIMALS) / (10 ** decimals);
-    }
-
-    function _pay(address token, address to, uint256 amount) private {
-        if (amount == 0) return;
-        if (token == address(0)) {
-            (bool ok,) = to.call{value: amount}("");
-            require(ok, "native transfer failed");
-        } else {
-            IERC20(token).safeTransfer(to, amount);
-        }
     }
 }

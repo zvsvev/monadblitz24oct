@@ -6,9 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 import { usePublicClient, useReadContract } from "wagmi";
 import { cn } from "@/lib/cn";
 import { HelpNote } from "@/components/help-note";
-import { ADDRESSES, NATIVE, boardAbi, isDeployed, potAbi } from "@/lib/contracts";
+import { ADDRESSES, boardAbi, isDeployed, potAbi } from "@/lib/contracts";
 import { DEMO_LISTINGS } from "@/lib/demo";
-import { formatMon, formatUsd } from "@/lib/format";
+import { formatUsdc, formatUsd } from "@/lib/format";
 import { displayUrl } from "@/lib/url";
 
 export type BoardListing = {
@@ -106,14 +106,14 @@ export function PotHud() {
     address: ADDRESSES.gachaPot,
     abi: potAbi,
     functionName: "potBalance",
-    args: [NATIVE],
+    args: [ADDRESSES.usdc],
     query: { enabled: isDeployed },
   });
 
-  const native = typeof data === "bigint" ? data : 0n;
+  const pot = typeof data === "bigint" ? data : 0n;
   return (
     <span className="hud-pill">
-      <span aria-hidden>🪙</span> pot {isDeployed ? formatMon(native) : "0.5 MON (demo)"}
+      <span aria-hidden>🪙</span> pot {isDeployed ? formatUsdc(pot) : "12.50 USDC (demo)"}
     </span>
   );
 }

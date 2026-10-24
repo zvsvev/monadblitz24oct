@@ -2,14 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { keccak256, parseEther, parseUnits, toBytes } from "viem";
+import { keccak256, parseUnits, toBytes } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import { HelpNote } from "@/components/help-note";
-import { cn } from "@/lib/cn";
 import { ADDRESSES, boardAbi, erc20Abi, isDeployed } from "@/lib/contracts";
 import { normalizeUrl } from "@/lib/url";
-
-type Token = "MON" | "USDC";
 
 export function ListForm() {
   const { address, isConnected } = useAccount();
@@ -18,50 +15,40 @@ export function ListForm() {
 
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
-  const [token, setToken] = useState<Token>("MON");
   const [amount, setAmount] = useState("10");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [listedKey, setListedKey] = useState<string | null>(null);
 
   const normalized = normalizeUrl(url);
-  const canSubmit = isDeployed && isConnected && !!normalized && title.trim().length > 0 && Number(amount) > 0;
+  const canSubmit =
+    isDeployed && isConnected && !!normalized && title.trim().length > 0 && Number(amount) > 0;
 
   async function submit() {
     if (!normalized || !publicClient) return;
     setBusy(true);
     setStatus("Waiting for your wallet…");
     try {
-      if (token === "MON") {
-        const hash = await writeContractAsync({
-          address: ADDRESSES.board,
-          abi: boardAbi,
-          functionName: "list",
-          args: [normalized, title.trim()],
-          value: parseEther(amount),
-        });
-        setStatus("Placing your listing…");
-        await publicClient.waitForTransactionReceipt({ hash });
-      } else {
-        const units = parseUnits(amount, 6);
-        const approveHash = await writeContractAsync({
-          address: ADDRESSES.usdc,
-          abi: erc20Abi,
-          functionName: "approve",
-          args: [ADDRESSES.board, units],
-        });
-        setStatus("Approving USDC…");
-        await publicClient.waitForTransactionReceipt({ hash: approveHash });
+      const units = parseUnits(amount, 6);
 
-        const listHash = await writeContractAsync({
-          address: ADDRESSES.board,
-          abi: boardAbi,
-          functionName: "listERC20",
-          args: [normalized, title.trim(), ADDRESSES.usdc, units],
-        });
-        setStatus("Placing your listing…");
-        await publicClient.waitForTransactionReceipt({ hash: listHash });
-      }
+      const approveHash = await writeContractAsync({
+        address: ADDRESSES.usdc,
+        abi: erc20Abi,
+        functionName: "approve",
+        args: [ADDRESSES.board, units],
+      });
+      setStatus("Approving USDC…");
+      await publicClient.waitForTransactionReceipt({ hash: approveHash });
+
+      const listHash = await writeContractAsync({
+        address: ADDRESSES.board,
+        abi: boardAbi,
+        functionName: "list",
+        args: [normalized, title.trim(), units],
+      });
+      setStatus("Placing your listing…");
+      await publicClient.waitForTransactionReceipt({ hash: listHash });
+
       setListedKey(keccak256(toBytes(normalized)));
       setStatus("You are on the board!");
     } catch (err) {
@@ -95,8 +82,9 @@ export function ListForm() {
       <div className="mb-3 flex items-center gap-2">
         <h2 className="text-lg font-extrabold text-eel">List on BuzzMe</h2>
         <HelpNote title="Rules">
-          A minimum of $10 equivalent starts a listing. To take first place you must beat the top
-          listing by at least $5. Paying the same URL again raises your own rank by the difference.
+          Listings are paid in USDC, 10 USDC minimum. To take first place you must beat the top
+          listing by at least 5 USDC. Paying the same URL again raises your own rank by the
+          difference. MON is only used for gas.
         </HelpNote>
       </div>
 
@@ -130,25 +118,9 @@ export function ListForm() {
           />
         </label>
 
-        <div className="flex flex-col gap-1">
-          <span className="text-xs font-extrabold uppercase tracking-wider text-wolf">Pay with</span>
-          <div className="flex gap-2">
-            {(["MON", "USDC"] as Token[]).map((t) => (
-              <button
-                key={t}
-                type="button"
-                className={cn("tab", token === t && "tab-selected")}
-                onClick={() => setToken(t)}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-        </div>
-
         <label className="flex flex-col gap-1">
           <span className="text-xs font-extrabold uppercase tracking-wider text-wolf">
-            Amount ({token})
+            Amount (USDC)
           </span>
           <input
             className="input"
@@ -158,21 +130,14 @@ export function ListForm() {
           />
         </label>
 
-        <button
-          className="btn btn-mon"
-          disabled={!canSubmit || busy}
-          onClick={submit}
-          type="button"
-        >
+        <button className="btn btn-mon" disabled={!canSubmit || busy} onClick={submit} type="button">
           {busy ? "Working…" : "Pay and list"}
         </button>
 
         {!isConnected && isDeployed && (
           <p className="text-xs font-bold text-wolf">Connect a wallet to list.</p>
         )}
-        {address && (
-          <p className="text-xs font-bold text-hare">Paying as {address}</p>
-        )}
+        {address && <p className="text-xs font-bold text-hare">Paying as {address}</p>}
         {status && <p className="text-xs font-bold text-mon">{status}</p>}
       </div>
     </div>

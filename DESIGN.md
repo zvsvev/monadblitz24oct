@@ -1,7 +1,7 @@
 ---
-version: 1.1
+version: 1.2
 name: BuzzMe-design-system
-description: "A playful game surface borrowed from the Duolingo app and painted in Monad purple: one confident action color (#836EF9) for every button and CTA, a friendly rounded type stack (Nunito), and chunky 16px cards with buttons that sit on a 4px darker edge and press down when tapped. Gold is reserved for the streak, the #1 rank and the gacha highlight; red is only for wrong or super zonk. The board reads like a leaderboard in a game you can win, not a table you inspect."
+description: "A playful game surface borrowed from the Duolingo app and painted in Monad purple: one confident action color (#836EF9) for every button and CTA, a friendly rounded type stack (Nunito), and chunky 16px cards with buttons that sit on a 4px darker edge and press down when tapped. Gold is reserved for the streak, the #1 rank and the gacha highlight; green appears exactly once, on the landing gacha CTA, so it reads apart from List; red is only for wrong or super zonk. The board reads like a leaderboard in a game you can win, not a table you inspect."
 colors:
   primary: "#836EF9"
   primary-pressed: "#6D57D8"
@@ -286,7 +286,8 @@ generic gray. Red is used for exactly one meaning: wrong, rejected, or super zon
 
 - **One action color.** Monad Purple carries every primary action (list, raise, spin) and the selected
   tab. There is no second brand color; the light lavender (`{colors.secondary}`) is only for tints and
-  borders.
+  borders. The single exception is the landing gacha call to action, which is green (`#58CC02`) so it
+  reads apart from the purple List button next to it.
 - **Chunky, rounded, bordered.** Cards and rows use `{rounded.lg}` 16px with a 2px border, never a
   shadow. The only shadow in the system is the flat 4px edge under a button.
 - **Buttons sit on an edge and press down.** Every button carries a solid `0 4px 0 <edge>` shadow that
@@ -371,6 +372,7 @@ One rule: **no thin weights anywhere.** If it looks like a document, it is wrong
 - **btn-primary** (purple, 4px edge): the one loud action per screen (List, Raise, Spin).
 - **btn-gacha** (purple gradient, deeper edge): the gacha call to action.
 - **btn-gold**: streak or reward moments.
+- **btn-green**: the landing gacha CTA only, the one non-purple action on the site.
 - **btn-ghost**: tertiary, quiet actions.
 - **card**: white, 16px radius, 2px border, 20px padding. No shadow.
 - **list-row**: the billboard unit described above.
@@ -401,7 +403,7 @@ takes more than a second to celebrate.
 Warm, short, and a little playful, in the Duolingo register: congratulate wins, soften losses, never
 lecture.
 
-- Do: "You are #3. Two more MON and you take the board."
+- Do: "You are #3. Two more USDC and you take the board."
 - Do: "Zonk. Nothing this time, but your streak is safe."
 - Do: "Super zonk. Share again to unlock tomorrow's spin."
 - Do not: "Transaction reverted: insufficient allowance."
@@ -421,7 +423,8 @@ words in the moment, precise words in `/docs`.
   board.
 - **Do not** add drop shadows to cards (only buttons carry an edge).
 - **Do not** use em dashes in copy (prefer commas and colons).
-- **Do not** use thin type, hard corners, or a second brand color.
+- **Do not** use thin type, hard corners, or a second brand color (the single green landing CTA is the
+  only exception).
 - **Do not** use red for anything other than wrong, rejected, or super zonk.
 
 ---

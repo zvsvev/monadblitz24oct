@@ -18,12 +18,10 @@ contract BuzzMeTest is Test {
     address bob = address(0xB1);
 
     function setUp() public {
-        pot = new GachaPot(owner, payer);
-        board = new BuzzMe(owner, address(pot), treasury);
         usdc = new MockUSDC();
+        pot = new GachaPot(owner, payer);
+        board = new BuzzMe(owner, address(pot), treasury, address(usdc));
 
-        vm.deal(alice, 10_000 ether);
-        vm.deal(bob, 10_000 ether);
         usdc.mint(alice, 1_000_000e6);
         usdc.mint(bob, 1_000_000e6);
     }
@@ -32,109 +30,114 @@ contract BuzzMeTest is Test {
         return keccak256(bytes(url));
     }
 
-    function test_ListNative_RanksAndSplits() public {
-        vm.prank(alice);
-        bytes32 key = board.list{value: 100 ether}("https://alice.xyz", "Alice");
+    function _list(address who, uint256 amount, string memory url) internal returns (bytes32) {
+        vm.startPrank(who);
+        usdc.approve(address(board), amount);
+        bytes32 key = board.list(url, who == alice ? "Alice" : "Bob", amount);
+        vm.stopPrank();
+        return key;
+    }
+
+    function test_ListUsdc_RanksAndSplits() public {
+        bytes32 key = _list(alice, 100e6, "https://alice.xyz");
 
         BuzzMe.Listing memory l = board.getListing(key);
         assertEq(l.owner, alice);
-        assertEq(l.totalUsd, 100e6, "100 MON at $1 = $100");
+        assertEq(l.totalUsd, 100e6, "100 USDC = $100");
         assertEq(board.listingCount(), 1);
         assertEq(board.topKey(), key);
         assertEq(board.topUsd(), 100e6);
 
-        // 50/50 split
-        assertEq(address(pot).balance, 50 ether, "gacha half");
-        assertEq(treasury.balance, 50 ether, "treasury half");
-        assertEq(address(board).balance, 0, "board keeps nothing");
+        // 50/50 split, in USDC
+        assertEq(usdc.balanceOf(address(pot)), 50e6, "gacha half");
+        assertEq(usdc.balanceOf(treasury), 50e6, "treasury half");
+        assertEq(usdc.balanceOf(address(board)), 0, "board keeps nothing");
     }
 
     function test_ListBelowMinimumReverts() public {
-        vm.prank(alice);
+        vm.startPrank(alice);
+        usdc.approve(address(board), 5e6);
         vm.expectRevert(BuzzMe.BelowMinimum.selector);
-        board.list{value: 5 ether}("https://alice.xyz", "Alice");
+        board.list("https://alice.xyz", "Alice", 5e6);
+        vm.stopPrank();
     }
 
     function test_DuplicateUrlReverts() public {
-        vm.prank(alice);
-        board.list{value: 100 ether}("https://alice.xyz", "Alice");
+        _list(alice, 100e6, "https://alice.xyz");
 
-        vm.prank(bob);
+        vm.startPrank(bob);
+        usdc.approve(address(board), 100e6);
         vm.expectRevert(BuzzMe.AlreadyListed.selector);
-        board.list{value: 100 ether}("https://alice.xyz", "Bob");
+        board.list("https://alice.xyz", "Bob", 100e6);
+        vm.stopPrank();
     }
 
     function test_Raise_OnlyOwner() public {
-        vm.prank(alice);
-        bytes32 key = board.list{value: 100 ether}("https://alice.xyz", "Alice");
+        bytes32 key = _list(alice, 100e6, "https://alice.xyz");
 
-        vm.prank(alice);
-        board.raise{value: 10 ether}(key);
+        vm.startPrank(alice);
+        usdc.approve(address(board), 10e6);
+        board.raise(key, 10e6);
+        vm.stopPrank();
         assertEq(board.totalUsdOf(key), 110e6);
 
-        vm.prank(bob);
+        vm.startPrank(bob);
+        usdc.approve(address(board), 10e6);
         vm.expectRevert(BuzzMe.NotOwner.selector);
-        board.raise{value: 10 ether}(key);
+        board.raise(key, 10e6);
+        vm.stopPrank();
+    }
+
+    function test_ZeroAmountReverts() public {
+        vm.prank(alice);
+        vm.expectRevert(BuzzMe.ZeroAmount.selector);
+        board.list("https://alice.xyz", "Alice", 0);
     }
 
     function test_MinimumIncrementToTakeTop() public {
-        vm.prank(alice);
-        board.list{value: 100 ether}("https://alice.xyz", "Alice");
+        _list(alice, 100e6, "https://alice.xyz");
 
         // A tie does not overtake the earlier listing.
-        vm.prank(bob);
-        board.list{value: 100 ether}("https://bob.xyz", "Bob");
+        _list(bob, 100e6, "https://bob.xyz");
         assertEq(board.topKey(), _key("https://alice.xyz"));
 
         // Crossing #1 by less than the increment is rejected.
-        vm.prank(bob);
+        vm.startPrank(bob);
+        usdc.approve(address(board), 102e6);
         vm.expectRevert(BuzzMe.IncrementTooSmall.selector);
-        board.list{value: 102 ether}("https://bob2.xyz", "Bob2");
+        board.list("https://bob2.xyz", "Bob2", 102e6);
+        vm.stopPrank();
 
         // Clearing the increment takes the top.
-        vm.prank(bob);
-        board.list{value: 105 ether}("https://bob3.xyz", "Bob3");
-        assertEq(board.topKey(), _key("https://bob3.xyz"));
+        bytes32 top = _list(bob, 105e6, "https://bob3.xyz");
+        assertEq(board.topKey(), top);
         assertEq(board.topUsd(), 105e6);
     }
 
     function test_DailyBucket() public {
-        vm.prank(alice);
-        bytes32 key = board.list{value: 100 ether}("https://alice.xyz", "Alice");
+        bytes32 key = _list(alice, 100e6, "https://alice.xyz");
 
         uint64 day = board.currentDay();
         assertEq(board.dayUsd(key, day), 100e6);
 
         vm.warp(block.timestamp + 1 days);
-        vm.prank(alice);
-        board.raise{value: 20 ether}(key);
-        assertEq(board.dayUsd(key, day), 100e6, "yesterday frozen");
-        assertEq(board.dayUsd(key, day + 1), 20e6, "today accumulates");
-    }
-
-    function test_ListUsdc() public {
         vm.startPrank(alice);
-        usdc.approve(address(board), 100e6);
-        bytes32 key = board.listERC20("https://alice.xyz", "Alice", address(usdc), 100e6);
+        usdc.approve(address(board), 20e6);
+        board.raise(key, 20e6);
         vm.stopPrank();
 
-        assertEq(board.totalUsdOf(key), 100e6, "100 USDC = $100");
-        assertEq(usdc.balanceOf(address(pot)), 50e6, "gacha half");
-        assertEq(usdc.balanceOf(treasury), 50e6, "treasury half");
-    }
-
-    function test_MonRateScalesUsd() public {
-        vm.prank(owner);
-        board.setMonUsdRate(2e6); // 1 MON = $2
-
-        vm.prank(alice);
-        bytes32 key = board.list{value: 100 ether}("https://alice.xyz", "Alice");
-        assertEq(board.totalUsdOf(key), 200e6);
+        assertEq(board.dayUsd(key, day), 100e6, "yesterday frozen");
+        assertEq(board.dayUsd(key, day + 1), 20e6, "today accumulates");
     }
 
     function test_AdminGuards() public {
         vm.prank(alice);
         vm.expectRevert();
         board.setGachaBps(1000);
+    }
+
+    function test_ConstructorRejectsZeroUsdc() public {
+        vm.expectRevert(BuzzMe.ZeroAddress.selector);
+        new BuzzMe(owner, address(pot), treasury, address(0));
     }
 }

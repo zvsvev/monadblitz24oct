@@ -5,11 +5,6 @@ export function formatUsd(value: bigint | number): string {
   return `$${n.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
 }
 
-export function formatMon(wei: bigint | number): string {
-  const n = typeof wei === "bigint" ? Number(wei) / 1e18 : wei / 1e18;
-  return `${n.toLocaleString("en-US", { maximumFractionDigits: 4 })} MON`;
-}
-
 export function formatUsdc(units: bigint | number): string {
   const n = typeof units === "bigint" ? Number(units) / 1e6 : units / 1e6;
   return `${n.toLocaleString("en-US", { maximumFractionDigits: 2 })} USDC`;

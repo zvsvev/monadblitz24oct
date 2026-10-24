@@ -87,6 +87,11 @@
     color: #2a2342;
     --btn-shadow: #e5a100;
   }
+  /* The one non-purple action: the landing gacha call to action, so it reads apart from List. */
+  .btn-green {
+    background: #58cc02;
+    --btn-shadow: #46a302;
+  }
   .btn-ghost {
     background: #ffffff;
     color: #6d57d8;

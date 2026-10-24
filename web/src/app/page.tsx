@@ -16,7 +16,7 @@ export default function HomePage() {
           <Link href="/list" className="btn btn-mon">
             List your project
           </Link>
-          <Link href="/dashboard" className="btn btn-gacha">
+          <Link href="/dashboard" className="btn btn-green">
             Try gacha
           </Link>
         </div>

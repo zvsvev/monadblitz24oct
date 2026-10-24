@@ -1,20 +1,21 @@
 # PRD: BuzzMe: Pay-to-Rank Billboards and a Daily Share-Gacha on Monad
 
-**Version:** 1.2 · **Date:** 24 Oct 2026
-**Supersedes:** v1.1. v1.2 renames the product to **BuzzMe** and repaints the surface in **Monad
-purple** (the green accent is gone); the design system is versioned in DESIGN.md.
+**Version:** 1.3 · **Date:** 24 Oct 2026
+**Supersedes:** v1.2. v1.3 makes USDC the only payment and the only prize (MON is gas), fixes the
+gacha tier ladder, and publishes the odds; the wallet layer is Privy.
 
 ---
 
 ## 0. What BuzzMe is
 
 **BuzzMe is a pay-to-rank billboard on Monad.** Anyone can put a project, an ad, or a link on the
-board and stand above everyone else by paying in **MON or testnet USDC**. Rank is what you pay, and
-nothing else. Three boards slice the same spend by time window: **All-time**, **Today**, and **Daily**.
+board and stand above everyone else by paying in **testnet USDC**. Rank is what you pay, and nothing
+else. (MON is only ever used for gas.) Three boards slice the same spend by time window: **All-time**,
+**Today**, and **Daily**.
 
 **Nobody has to pay to take part.** A second loop rewards the people who promote the board: share
-BuzzMe once a day and you earn a **gacha spin**, with a small chance of MON or USDC and a much
-larger chance of nothing at all. The gacha pool is funded by **50% of every placement payment**, so
+BuzzMe once a day and you earn a **gacha spin**, with a small chance of a USDC prize and a much
+larger chance of nothing at all. The gacha pot is funded by **50% of every placement payment**, so
 the reward tracks the board's real revenue instead of printed emissions.
 
 **The whole surface is dressed like Duolingo, in Monad purple:** one confident purple, chunky rounded
@@ -69,7 +70,7 @@ compatible, so the standard tooling (Solidity, Foundry, wagmi) works unchanged.
 
 1. **Connect a wallet.** Any EVM wallet, or a Privy embedded wallet created with email or a passkey.
 2. **Describe the placement.** A URL or X handle, a title, an optional image URL, and a category.
-3. **Pay.** Choose MON (native) or testnet USDC, and an amount. This amount becomes your rank.
+3. **Pay.** Choose an amount of testnet USDC. This amount becomes your rank.
 4. **Appear on the board.** The listing is live as soon as the payment settles (about 800ms on Monad).
 
 New listings are whole units with a minimum, and any amount above the minimum is accepted. Tuples are
@@ -132,9 +133,9 @@ Every placement payment is split at the moment it is received:
 
 - The split is a standing commitment, published on the board the same way it is written here. It is a
   contract parameter (`gachaBps`), changeable only by the owner and visible on-chain.
-- **MON and USDC are accounted for separately.** Both the pot and the treasury track two balances, so a
-  USDC prize is paid from the USDC pool and a MON prize from the MON pool. Neither can quietly drain
-  the other.
+- **The settlement token is USDC, and only USDC.** The board takes USDC and the pot pays USDC. MON is
+  never accepted as payment and never paid as a prize; it is only ever spent on gas. The board stores
+  the token in `usdc`, so any other ERC-20 is rejected.
 - No staking, no emissions, no yield. The only money that moves is money someone chose to spend.
 
 ---
@@ -150,17 +151,19 @@ Every placement payment is split at the moment it is received:
 
 ### 4.2 What you can win
 
-| Tier | Prize | Rough odds | Notes |
-| --- | --- | --- | --- |
-| **Zonk** | Junk: a cosmetic badge or sticker | most spins | No value, never a fake prize. |
-| **Super zonk** | Nothing, and a share debt | uncommon | You must share again before your next spin. |
-| **MON** | A small MON prize | occasional | Paid on-chain from the MON pool. |
-| **BIG MON** | A larger MON prize | rare | Solvency-capped. |
-| **USDC** | A small USDC prize | occasional | Paid on-chain from the USDC pool. |
-| **BIG USDC** | A larger USDC prize | very rare | Solvency-capped. |
+| Prize | Chance | Notes |
+| --- | --- | --- |
+| **100 USDC** | 1% | Capped by the pot. |
+| **50 USDC** | 3% | Capped by the pot. |
+| **10 USDC** | 5% | Capped by the pot. |
+| **1 USDC** | 10% | Capped by the pot. |
+| **0.05 USDC** | 20% | Capped by the pot. |
+| **0.01 USDC** | 30% | Capped by the pot. |
+| **Zonk** | 31% | Nothing this time. Some zonks are super zonks. |
 
-Exact weights and prize sizes are contract and backend parameters, tuned so expected payout sits
-below the pot's funding. They are published in the gacha section of the user profile, not hidden.
+Every prize is USDC; MON is never paid out. The ladder is mirrored on-chain in `GachaPot.tierAmount`,
+so the published odds and the paid amounts cannot drift apart. The table is published on the profile's
+gacha panel and on the `/docs` page, not hidden.
 
 ### 4.3 Fairness
 
@@ -229,12 +232,13 @@ monadblitz24oct/
 **Contracts (Monad testnet):**
 
 - **`BuzzMe`** receives placements, records spend, enforces the rank rules, and routes the 50/50
-  split. It accepts native MON and any ERC-20 (testnet USDC), and normalizes MON to a USD score through
-  a price seam the owner can point at a real feed.
-- **`GachaPot`** holds the reward pool and pays winners after a commit-reveal, with a solvency check
-  per token. Payouts are bounded by the pot balance at all times.
+  split. It accepts **testnet USDC only** (the token is fixed in `usdc`), and scores spend as USD
+  directly, since USDC is 1:1 with the dollar.
+- **`GachaPot`** holds the reward pot and pays winners in USDC after a commit-reveal, with a solvency
+  check. Payouts are bounded by the pot balance at all times, and the tier ladder is readable on-chain
+  through `tierAmount`.
 
-**Stack.** Frontend on Next.js (App Router) with shadcn and Tailwind v4, wagmi v3 and viem for chain
+**Stack.** Frontend on Next.js (App Router) with Tailwind v4, wagmi v3 and viem for chain
 reads and writes, and **Privy** for wallets (email, passkey and social login plus external connect).
 Off-chain state on
 Cloudflare D1. Contracts built with Foundry and deployed as CREATE2 through the canonical **CreateX**
@@ -252,7 +256,7 @@ The frontend deploys to **Cloudflare Workers** through OpenNext.
 **Must-have (the demo):**
 
 - Wallet connect (Privy) and a connected board.
-- Listing with a real on-chain payment in MON or in testnet USDC (approve plus list).
+- Listing with a real on-chain payment in testnet USDC (approve plus list).
 - The three boards (All-time, Today, Daily) with correct on-chain ranking, and raising your own rank.
 - The 50/50 split verified on-chain (pot balance rises, treasury receives its half).
 - Share to unlock a daily spin, with commit-reveal and an on-chain payout of a small prize.
@@ -275,14 +279,14 @@ binding is provisioned.
 
 ## 8. Non-functional and honesty
 
-- **Testnet and worthless tokens.** Everything runs on Monad testnet. MON and the stablecoin used here
-  are test assets with no value. Nothing here is an investment.
+- **Testnet and worthless tokens.** Everything runs on Monad testnet. The USDC used here is a test
+  asset with no value. Nothing here is an investment.
 - **The gacha is an earned reward, not paid gambling.** Spins are earned by sharing, never sold, and
   the pool is funded by placement revenue. Local gambling and lottery rules still apply and must be
   checked before any real-money launch.
 - **Randomness is hackathon-grade.** Commit-reveal, not a hardware VRF. Labelled as such on the page.
-- **The MON/USD rate is a demonstration rate.** Ranking normalizes MON to USD with an owner-set rate
-  (a real price feed is the mainnet path). Both the rate and its use are stated on the board.
+- **Rank is a USDC score.** Because the only payment token is USDC, rank is the amount paid, with no
+  exchange-rate seam to trust. There is no MON price feed to keep honest.
 - **Rank is spend, and spend is not quality.** A higher listing is not a better product; it is a
   higher-paying one. The board says this plainly.
 - **The share gate is intent-based.** We record that a share action happened; we cannot prove a post
@@ -296,7 +300,7 @@ binding is provisioned.
 ## 9. Success metrics
 
 North star: **a paid placement that a visitor acts on**, meaning listings created, and clicks through
-to listed projects. Supporting metrics: placement revenue (MON and USDC), the gacha pot balance, daily
+to listed projects. Supporting metrics: placement revenue (USDC), the gacha pot balance, daily
 shares and streaks, and spins per day. Anti-metric: prize value paid out, which should always sit
 below funding.
 
@@ -310,22 +314,24 @@ below funding.
 | --- | --- |
 | Network scope | Monad testnet only (chain id 10143). No mainnet cut. |
 | Placement model | Pay-to-rank leaderboard (not pixels, not fixed banner slots). |
-| Tokens | MON and testnet USDC. |
+| Token | Testnet USDC only (MON for gas only). |
 | Revenue split | 50% gacha pot, 50% treasury and operations. |
 | Gacha entry | One share per UTC day per wallet, one spin per day. |
 | Super zonk | Pays nothing and records a share debt: share again before the next spin. |
-| Ranking unit | USD-normalized score, with an owner-set MON rate for the demo. |
+| Prize ladder | 100 / 50 / 10 / 1 / 0.05 / 0.01 USDC, then a zonk; odds published. |
+| Ranking unit | USDC paid, scored as USD (no exchange-rate seam). |
 | Docs and copy | The PRD and the DESIGN are English; the README is English and Indonesian. |
 | Product name | **BuzzMe**. |
 
 **Still open:**
 
 1. **Minimum spend and the #1 increment** (the exact numbers).
-2. **Prize sizes and weights** for each gacha tier, and the per-wallet daily payout cap.
+2. **The per-wallet daily payout cap,** and whether the pot's tier amounts are re-tuned once real
+   revenue lands.
 3. **Listing ownership variant:** keyed-by-URL with an owner (current), versus an open-boost model
    where anyone may add spend to a shared listing.
-4. **The MON price feed.** Owner-set demonstration rate for the Blitz versus a Chainlink or Redstone
-   feed on testnet.
+4. **The pot top-up policy.** Whether the treasury refills the pot when a jackpot would otherwise be
+   capped by an empty pot.
 5. **Streak rewards.** Whether the streak earns an odds boost, bonus spins, or stays cosmetic.
 6. **The mascot.** Working name **Bo**; real art and a final name to land.
 7. **Off-chain store.** Confirm Cloudflare D1 (needs `D1: Edit` on the deploy token) versus a Supabase
@@ -335,6 +341,11 @@ below funding.
 
 ## 11. Revision history
 
+- **v1.3 (24 Oct 2026)**: USDC is now the only payment and the only prize; MON is reserved for gas.
+  `BuzzMe` fixes the settlement token in `usdc` and drops the native path, so 10 USDC and the 5 USDC
+  #1 increment are the rule. The gacha ladder is fixed at 100 / 50 / 10 / 1 / 0.05 / 0.01 USDC then a
+  zonk, mirrored on-chain in `GachaPot.tierAmount`, and the odds are published on the profile's gacha
+  panel and `/docs`. Demo board data now uses real brands with real values.
 - **v1.2 (24 Oct 2026)**: Renamed the product from Supaboard to **BuzzMe**. The surface moved from the
   green accent to **Monad purple** (#836EF9), with a lavender-tinted neutral palette, gold kept for
   streaks, the #1 rank and the gacha highlight, and red kept only for wrong and super zonk. Contracts

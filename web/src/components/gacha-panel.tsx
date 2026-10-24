@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAccount } from "wagmi";
 import { Mascot } from "@/components/mascot";
 import { cn } from "@/lib/cn";
-import { drawDemoSpinNow, type DemoOutcome } from "@/lib/demo";
+import { drawOutcomeNow, GACHA_ODDS, type GachaOutcome } from "@/lib/gacha";
 
 const SITE = "https://buzzme.m31-ulinnuha.workers.dev";
 const SHARE_TEXT = "Climbing the BuzzMe billboard on Monad. Pay to rank, or share to try gacha.";
@@ -24,7 +24,7 @@ export function GachaPanel() {
   const { address, isConnected } = useAccount();
   const [shared, setShared] = useState(false);
   const [spun, setSpun] = useState(false);
-  const [outcome, setOutcome] = useState<DemoOutcome | null>(null);
+  const [outcome, setOutcome] = useState<GachaOutcome | null>(null);
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
 
@@ -60,7 +60,7 @@ export function GachaPanel() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ address }),
       });
-      const data = (await res.json()) as { ok?: boolean; outcome?: DemoOutcome; error?: string };
+      const data = (await res.json()) as { ok?: boolean; outcome?: GachaOutcome; error?: string };
       if (data.ok && data.outcome) {
         setOutcome(data.outcome);
         setSpun(true);
@@ -76,7 +76,7 @@ export function GachaPanel() {
   }
 
   function preview() {
-    setOutcome(drawDemoSpinNow());
+    setOutcome(drawOutcomeNow());
   }
 
   const links = shareLinks(address);
@@ -150,6 +150,27 @@ export function GachaPanel() {
           )}
         </div>
       )}
+
+      <div className="card">
+        <p className="mb-2 text-xs font-extrabold uppercase tracking-wider text-wolf">
+          Odds (1 spin = 1 draw)
+        </p>
+        <ul className="flex flex-col gap-1">
+          {GACHA_ODDS.map((row) => (
+            <li
+              key={row.tier}
+              className="flex items-center justify-between border-b-2 border-polar pb-1 text-sm font-bold text-eel last:border-0"
+            >
+              <span>{row.amount > 0 ? `${row.amount} USDC` : "Zonk"}</span>
+              <span className="font-extrabold text-mon-dark">{row.probability}%</span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-xs font-semibold text-hare">
+          Some zonks are super zonks, which ask you to share again. Prizes are always capped by the
+          pot, so a spin can never pay more than the pot holds.
+        </p>
+      </div>
     </div>
   );
 }

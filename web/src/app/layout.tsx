@@ -14,7 +14,7 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   title: "BuzzMe: pay-to-rank billboard on Monad",
   description:
-    "Pay in MON or USDC to rank your project on a public board, or share the board to spin a daily chest. On Monad testnet.",
+    "Pay in USDC to rank your project on a public board, or share the board to try the daily gacha. On Monad testnet.",
 };
 
 const FOOTER_LINKS = [

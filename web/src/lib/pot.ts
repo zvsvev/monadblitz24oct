@@ -5,26 +5,16 @@ import {
   http,
   keccak256,
   parseAbiParameters,
-  parseEther,
   parseUnits,
   type Address,
   type Hex,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { monadTestnet } from "wagmi/chains";
-import type { DemoOutcome } from "./demo";
+import { type GachaOutcome, tierIdFor } from "./gacha";
 import { ADDRESSES, NATIVE, potAbi } from "./contracts";
 
 const RPC = "https://testnet-rpc.monad.xyz";
-
-/** On-chain tier ids, matching GachaPot's constants. */
-const TIER_IDS: Record<string, number> = {
-  zonk: 0,
-  mon: 1,
-  "big-mon": 2,
-  usdc: 3,
-  "big-usdc": 4,
-};
 
 function payerClient() {
   const pk = process.env.PAYER_PRIVATE_KEY;
@@ -40,20 +30,19 @@ export function onChainConfigured(): boolean {
   return !!payerClient() && ADDRESSES.gachaPot !== NATIVE;
 }
 
-/** Maps a draw to the (tier, amount, token) triple the pot pays. Zonk and super zonk pay nothing. */
-export function payoutFor(outcome: DemoOutcome): { tier: number; amount: bigint; token: Address } | null {
-  switch (outcome.tier) {
-    case "mon":
-      return { tier: TIER_IDS.mon, amount: parseEther("0.5"), token: NATIVE };
-    case "big-mon":
-      return { tier: TIER_IDS["big-mon"], amount: parseEther("10"), token: NATIVE };
-    case "usdc":
-      return { tier: TIER_IDS.usdc, amount: parseUnits("2", 6), token: ADDRESSES.usdc };
-    case "big-usdc":
-      return { tier: TIER_IDS["big-usdc"], amount: parseUnits("25", 6), token: ADDRESSES.usdc };
-    default:
-      return null;
-  }
+/**
+ * Maps a draw to the (tier, amount, token) the pot pays. Everything is USDC; zonk and super zonk
+ * pay nothing. Returns null when there is nothing to pay.
+ */
+export function payoutFor(
+  outcome: GachaOutcome,
+): { tier: number; amount: bigint; token: Address } | null {
+  if (outcome.amount <= 0) return null;
+  return {
+    tier: tierIdFor(outcome.tier),
+    amount: parseUnits(outcome.amount.toString(), 6),
+    token: ADDRESSES.usdc,
+  };
 }
 
 /**
@@ -62,12 +51,12 @@ export function payoutFor(outcome: DemoOutcome): { tier: number; amount: bigint;
  */
 export async function runOnChainSpin(
   player: Address,
-  outcome: DemoOutcome,
+  outcome: GachaOutcome,
 ): Promise<string[] | null> {
   const client = payerClient();
   if (!client) return null;
 
-  const payout = payoutFor(outcome) ?? { tier: TIER_IDS.zonk, amount: 0n, token: NATIVE };
+  const payout = payoutFor(outcome) ?? { tier: 0, amount: 0n, token: ADDRESSES.usdc };
 
   const nonceBytes = new Uint8Array(32);
   crypto.getRandomValues(nonceBytes);
