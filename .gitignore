@@ -1,0 +1,23 @@
+# Dependencies and build output
+node_modules/
+.next/
+.open-next/
+.wrangler/
+out/
+cache/
+coverage/
+dist/
+
+# Env files (keep the .example templates)
+.env
+.env*.local
+.dev.vars
+.dev.vars*.local
+
+# Foundry local state
+contracts/broadcast/
+contracts/cache/
+
+# Logs and OS noise
+*.log
+.DS_Store
