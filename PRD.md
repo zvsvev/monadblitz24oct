@@ -1,7 +1,8 @@
 # PRD: Supaboard: Pay-to-Rank Billboards and a Daily Share-Gacha on Monad
 
-**Version:** 1.0 · **Date:** 24 Oct 2026
-**Supersedes:** (new document). First specification, written for Monad Blitz.
+**Version:** 1.1 · **Date:** 24 Oct 2026
+**Supersedes:** v1.0. v1.1 moves the gacha inside the user profile (there is no separate gacha page)
+and settles the landing copy: the call to action reads "Try gacha".
 
 ---
 
@@ -159,7 +160,7 @@ Every placement payment is split at the moment it is received:
 | **BIG USDC** | A larger USDC prize | very rare | Solvency-capped. |
 
 Exact weights and prize sizes are contract and backend parameters, tuned so expected payout sits
-below the pot's funding. They are published on the gacha page, not hidden.
+below the pot's funding. They are published in the gacha section of the user profile, not hidden.
 
 ### 4.3 Fairness
 
@@ -180,8 +181,7 @@ reason to matter.
 
 ### 4.5 The streaks
 
-Daily shares build a streak, shown as a Duolingo-style flame count on the gacha page and the
-dashboard. The streak is cosmetic for the Blitz (it gates nothing yet); the obvious next step is a
+Daily shares build a streak, shown as a Duolingo-style flame count in the profile next to the gacha. The streak is cosmetic for the Blitz (it gates nothing yet); the obvious next step is a
 small odds boost, listed in §10.
 
 ---
@@ -258,7 +258,7 @@ The frontend deploys to **Cloudflare Workers** through OpenNext.
 - Zonk and super-zonk outcomes, including the share debt that locks the next spin until re-share.
 - A dashboard: your listings, your spend, your streak, your spins, your winnings (each with an
   explorer link).
-- A gacha page that shows the pot, the odds, and the fairness note.
+- The gacha inside the user profile, showing the pot, the odds, and the fairness note.
 
 **Nice-to-have:** a streak odds boost, categories and filtering, a delisting admin screen, a
 top-slot review queue.
@@ -334,6 +334,10 @@ below funding.
 
 ## 11. Revision history
 
+- **v1.1 (24 Oct 2026)**: The gacha moved out of a standalone page and into the user profile, where
+  it sits beside the listings and the spin history. Landing copy settled: "Try gacha" replaces the
+  earlier chest wording, and the board's key facts (pot, share daily, rank = what you pay) moved into
+  an in-board help note. Implementation matches this version.
 - **v1.0 (24 Oct 2026)**: First specification, written for Monad Blitz. Supaboard is a pay-to-rank
   billboard on Monad: any project, ad, or link can pay in MON or testnet USDC to stand higher on three
   boards (All-time, Today, Daily). 50% of placement revenue funds a daily share-gacha whose prizes are

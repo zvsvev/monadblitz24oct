@@ -1,0 +1,3 @@
+# Copy to web/.dev.vars for local OpenNext preview, and set as Wrangler secrets in production.
+# Server-only: the GachaPot `payer` key that commits and reveals spins.
+PAYER_PRIVATE_KEY=

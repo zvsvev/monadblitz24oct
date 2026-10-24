@@ -294,7 +294,8 @@ around a hard mechanism.
 
 ## Colors
 
-> Source pages: `/` (the board), `/list`, `/board/[key]`, `/gacha`, `/dashboard`, `/how`.
+> Source pages: `/` (the board), `/list`, `/board/[key]`, `/dashboard` (the profile, which holds the
+> gacha), `/how`.
 
 ### Brand and action
 
